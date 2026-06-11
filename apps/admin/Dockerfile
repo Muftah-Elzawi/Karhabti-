@@ -9,6 +9,8 @@ ENV NEXT_OUTPUT=standalone
 WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile --filter @karhabti/admin...
+# Build workspace packages consumed via their dist output.
+RUN pnpm --filter @karhabti/validation build
 RUN pnpm --filter @karhabti/admin build
 
 FROM node:22-alpine AS runtime

@@ -12,6 +12,8 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile --filter @karhabti/web...
+# Build workspace packages consumed via their dist output.
+RUN pnpm --filter @karhabti/validation build
 RUN pnpm --filter @karhabti/web build
 
 FROM node:22-alpine AS runtime
