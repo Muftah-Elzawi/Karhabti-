@@ -6,6 +6,9 @@ FROM node:22-alpine AS build
 RUN corepack enable
 # Standalone output is produced ONLY inside Docker (see next.config.mjs).
 ENV NEXT_OUTPUT=standalone
+# Baked into the client bundle at build time — pass the real staging URL.
+ARG NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile --filter @karhabti/web...

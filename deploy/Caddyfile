@@ -1,0 +1,12 @@
+# Automatic HTTPS via Let's Encrypt — requires the DNS A records for
+# {$STAGING_DOMAIN} and api.{$STAGING_DOMAIN} to point at this server.
+
+{$STAGING_DOMAIN} {
+	encode gzip
+	reverse_proxy web:3000
+}
+
+api.{$STAGING_DOMAIN} {
+	encode gzip
+	reverse_proxy api:3001
+}

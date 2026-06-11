@@ -8,8 +8,21 @@ RUN corepack enable
 WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile --filter @karhabti/api...
+# Generate the Prisma client (schema lives in packages/database).
+RUN pnpm --filter @karhabti/database db:generate
+# Build workspace packages the API consumes at runtime (main -> dist).
+RUN pnpm --filter @karhabti/validation build
 RUN pnpm --filter @karhabti/api build
 RUN pnpm --filter @karhabti/api deploy --prod --legacy /out
+# pnpm deploy copies packages, not the GENERATED .prisma client beside
+# @prisma/client in the store — carry it over explicitly.
+RUN cp -r /repo/node_modules/.pnpm/@prisma+client*/node_modules/.prisma /out/node_modules/.prisma
+
+# One-off migration runner (has the prisma CLI + schema):
+#   docker compose --profile migrate run --rm migrate
+FROM build AS migrate
+WORKDIR /repo/packages/database
+CMD ["pnpm", "exec", "prisma", "migrate", "deploy"]
 
 FROM node:22-alpine AS runtime
 ENV NODE_ENV=production
