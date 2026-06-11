@@ -2,10 +2,56 @@
   "common": {
     "appName": "Karhabti",
     "tagline": "Everything your car needs, in one place",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "back": "Back"
   },
   "locations": {
     "tripoli": "Tripoli",
     "benghazi": "Benghazi"
+  },
+  "auth": {
+    "registerTitle": "Create account",
+    "loginTitle": "Sign in",
+    "verifyTitle": "Verify your phone",
+    "verifyHint": "We sent a 6-digit code to",
+    "phone": "Phone number",
+    "phonePlaceholder": "091XXXXXXX",
+    "password": "Password",
+    "displayName": "Name",
+    "otpCode": "Verification code",
+    "submitRegister": "Create account",
+    "submitLogin": "Sign in",
+    "submitVerify": "Verify",
+    "resendOtp": "Resend code",
+    "otpResent": "A new code was sent",
+    "haveAccount": "Have an account? Sign in",
+    "noAccount": "No account? Create one",
+    "logout": "Sign out",
+    "profileTitle": "My account",
+    "role": "Account type",
+    "roleCustomer": "Customer",
+    "roleProvider": "Service provider",
+    "roleAdmin": "Admin",
+    "memberSince": "Member since",
+    "phoneVerified": "Phone verified"
+  },
+  "errors": {
+    "VALIDATION_ERROR": "Check the entered data",
+    "PHONE_TAKEN": "This phone is already registered",
+    "INVALID_CREDENTIALS": "Wrong phone or password",
+    "PHONE_NOT_VERIFIED": "Verify your phone first",
+    "USER_NOT_FOUND": "No account for this phone",
+    "ALREADY_VERIFIED": "This phone is already verified",
+    "OTP_INVALID": "Incorrect code",
+    "OTP_EXPIRED": "Code expired — request a new one",
+    "OTP_TOO_MANY_ATTEMPTS": "Too many attempts — request a new code",
+    "RATE_LIMITED": "Too many attempts — try again later",
+    "UNAUTHORIZED": "Session expired — sign in again",
+    "INTERNAL_ERROR": "Something went wrong — try again",
+    "NETWORK": "Could not reach the server",
+    "invalid_libyan_phone": "Enter a valid Libyan number (e.g. 0912345678)",
+    "invalid_otp_code": "Enter the 6-digit code",
+    "password_too_short": "Password must be at least 8 characters",
+    "displayName_too_short": "Enter your name"
   }
 }

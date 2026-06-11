@@ -1,0 +1,279 @@
+/* Karhabti design tokens (KARHABTI_BUILD_PROMPT.md §4) as CSS variables.
+   Source of truth: packages/config/tamagui/tokens.ts — keep in sync until
+   full Tamagui wiring lands with packages/ui (Phase 2). */
+:root {
+  /* palette */
+  --color-brand: #c8102e; /* Libyan red — primary actions */
+  --color-text: #1a1a1a; /* charcoal */
+  --color-accent: #e8a33d; /* sand amber */
+  --color-bg: #faf7f2; /* warm white — never pure white */
+  --color-success: #5c7a2a; /* olive green */
+  --color-surface: #ffffff;
+  --color-border: #e5ded3;
+  --color-text-muted: #6b6258;
+  --color-danger: #b3261e;
+
+  /* type scale (px) */
+  --text-caption: 12px;
+  --text-body: 14px;
+  --text-body-lg: 16px;
+  --text-title: 20px;
+  --text-headline: 24px;
+  --text-display: 32px;
+
+  /* spacing (4pt grid) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+
+  /* radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  /* Arabic face first (covers Arabic glyphs), Inter for Latin runs. */
+  font-family: var(--font-arabic), var(--font-latin), sans-serif;
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---- layout ---- */
+
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-lg) var(--space-md);
+}
+
+.page-center {
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.brand {
+  color: var(--color-brand);
+  font-size: var(--text-display);
+  font-weight: 500;
+  margin: 0;
+}
+
+.tagline {
+  color: var(--color-text-muted);
+  margin-block: var(--space-sm) var(--space-xl);
+}
+
+h1.title {
+  font-size: var(--text-headline);
+  font-weight: 500;
+  margin-block: 0 var(--space-lg);
+}
+
+/* ---- forms ---- */
+
+.field {
+  display: block;
+  margin-block-end: var(--space-md);
+}
+
+.field-label {
+  display: block;
+  font-size: var(--text-body);
+  font-weight: 500;
+  margin-block-end: var(--space-xs);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.input[dir='ltr'] {
+  /* phone / OTP inputs stay LTR even in RTL layout */
+  direction: ltr;
+  text-align: start;
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: var(--text-caption);
+  margin-block-start: var(--space-xs);
+}
+
+.form-error {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-body);
+  margin-block-end: var(--space-md);
+}
+
+.form-notice {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-body);
+  margin-block-end: var(--space-md);
+}
+
+/* ---- buttons ---- */
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px var(--space-md);
+  font: inherit;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--color-brand) 88%, black);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-brand);
+  width: auto;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.btn-row {
+  display: flex;
+  gap: var(--space-md);
+  width: 100%;
+  max-width: 420px;
+}
+
+.btn-row .btn {
+  flex: 1;
+}
+
+/* ---- misc ---- */
+
+.auth-footer {
+  margin-block-start: var(--space-md);
+  font-size: var(--text-body);
+  text-align: center;
+}
+
+.badge-success {
+  display: inline-block;
+  background: var(--color-success);
+  color: #fff;
+  font-size: var(--text-caption);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-sm);
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-sm);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.profile-row dt {
+  color: var(--color-text-muted);
+}
+
+.profile-row dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.locale-switcher {
+  display: flex;
+  gap: var(--space-sm);
+  margin-block-start: var(--space-xl);
+}
+
+.locale-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font: inherit;
+  font-size: var(--text-caption);
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.locale-btn:disabled {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn,
+  .input,
+  .locale-btn {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+}

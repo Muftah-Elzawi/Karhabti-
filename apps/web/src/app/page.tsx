@@ -1,12 +1,36 @@
-import { defaultLocale, messages } from '@karhabti/i18n';
+import Link from 'next/link';
 
-const t = messages[defaultLocale];
+import { LocaleSwitcher } from '@/components/locale-switcher';
+import { getMessages } from '@/lib/i18n';
+import { getAccessToken } from '@/lib/session';
 
 export default function HomePage() {
+  const t = getMessages();
+  const isAuthenticated = Boolean(getAccessToken());
+
   return (
-    <main>
-      <h1>{t.common.appName}</h1>
-      <p>{t.common.tagline}</p>
+    <main className="page page-center">
+      <h1 className="brand">{t.common.appName}</h1>
+      <p className="tagline">{t.common.tagline}</p>
+
+      {isAuthenticated ? (
+        <div className="btn-row">
+          <Link className="btn btn-primary" href="/profile">
+            {t.auth.profileTitle}
+          </Link>
+        </div>
+      ) : (
+        <div className="btn-row">
+          <Link className="btn btn-primary" href="/register">
+            {t.auth.registerTitle}
+          </Link>
+          <Link className="btn btn-primary" href="/login">
+            {t.auth.loginTitle}
+          </Link>
+        </div>
+      )}
+
+      <LocaleSwitcher />
     </main>
   );
 }

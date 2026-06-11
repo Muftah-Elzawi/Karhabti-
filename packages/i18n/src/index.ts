@@ -9,3 +9,8 @@ export type Locale = (typeof locales)[number];
 
 export const messages = { ar, en } as const;
 export type Messages = typeof ar;
+
+/** Native-language names for the locale switcher (identical in every locale). */
+export const localeLabels: Record<Locale, string> = { ar: 'العربية', en: 'English' };
+
+export const dirFor = (locale: Locale): 'rtl' | 'ltr' => (locale === 'ar' ? 'rtl' : 'ltr');

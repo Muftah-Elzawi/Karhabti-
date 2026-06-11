@@ -2,10 +2,56 @@
   "common": {
     "appName": "كرهبتي",
     "tagline": "كل ما تحتاجه كرهبتك في مكان واحد",
-    "loading": "جارٍ التحميل…"
+    "loading": "جارٍ التحميل…",
+    "back": "رجوع"
   },
   "locations": {
     "tripoli": "طرابلس",
     "benghazi": "بنغازي"
+  },
+  "auth": {
+    "registerTitle": "إنشاء حساب",
+    "loginTitle": "تسجيل الدخول",
+    "verifyTitle": "تأكيد رقم الهاتف",
+    "verifyHint": "أرسلنا رمز تحقق من 6 أرقام إلى",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "091XXXXXXX",
+    "password": "كلمة المرور",
+    "displayName": "الاسم",
+    "otpCode": "رمز التحقق",
+    "submitRegister": "إنشاء الحساب",
+    "submitLogin": "دخول",
+    "submitVerify": "تأكيد",
+    "resendOtp": "إعادة إرسال الرمز",
+    "otpResent": "تم إرسال رمز جديد",
+    "haveAccount": "لديك حساب؟ سجّل الدخول",
+    "noAccount": "ليس لديك حساب؟ أنشئ واحدًا",
+    "logout": "تسجيل الخروج",
+    "profileTitle": "حسابي",
+    "role": "نوع الحساب",
+    "roleCustomer": "عميل",
+    "roleProvider": "مزوّد خدمة",
+    "roleAdmin": "مدير",
+    "memberSince": "عضو منذ",
+    "phoneVerified": "الهاتف مُوثّق"
+  },
+  "errors": {
+    "VALIDATION_ERROR": "تحقق من البيانات المدخلة",
+    "PHONE_TAKEN": "هذا الرقم مسجّل من قبل",
+    "INVALID_CREDENTIALS": "رقم الهاتف أو كلمة المرور غير صحيحة",
+    "PHONE_NOT_VERIFIED": "يجب تأكيد رقم هاتفك أولًا",
+    "USER_NOT_FOUND": "لا يوجد حساب بهذا الرقم",
+    "ALREADY_VERIFIED": "هذا الرقم مُوثّق بالفعل",
+    "OTP_INVALID": "الرمز غير صحيح",
+    "OTP_EXPIRED": "انتهت صلاحية الرمز — اطلب رمزًا جديدًا",
+    "OTP_TOO_MANY_ATTEMPTS": "محاولات كثيرة — اطلب رمزًا جديدًا",
+    "RATE_LIMITED": "محاولات كثيرة — حاول لاحقًا",
+    "UNAUTHORIZED": "انتهت الجلسة — سجّل الدخول مجددًا",
+    "INTERNAL_ERROR": "حدث خطأ — حاول مرة أخرى",
+    "NETWORK": "تعذّر الاتصال بالخادم",
+    "invalid_libyan_phone": "أدخل رقمًا ليبيًا صحيحًا (مثال: 0912345678)",
+    "invalid_otp_code": "أدخل الرمز المكوّن من 6 أرقام",
+    "password_too_short": "كلمة المرور 8 أحرف على الأقل",
+    "displayName_too_short": "أدخل اسمك"
   }
 }

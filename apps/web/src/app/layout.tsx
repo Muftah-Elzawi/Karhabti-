@@ -1,19 +1,52 @@
-import type { Metadata } from 'next';
+import './globals.css';
+
+import type { Metadata, Viewport } from 'next';
+import { IBM_Plex_Sans_Arabic, Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 
-import { defaultLocale, messages } from '@karhabti/i18n';
+import { dirFor } from '@karhabti/i18n';
 
-const t = messages[defaultLocale];
+import { ServiceWorkerRegister } from '@/components/service-worker-register';
+import { getLocale, getMessages } from '@/lib/i18n';
 
-export const metadata: Metadata = {
-  title: t.common.appName,
-  description: t.common.tagline,
+const arabicFont = IBM_Plex_Sans_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '500'],
+  variable: '--font-arabic',
+});
+
+const latinFont = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-latin',
+});
+
+export function generateMetadata(): Metadata {
+  const t = getMessages();
+  return {
+    title: { default: t.common.appName, template: `%s — ${t.common.appName}` },
+    description: t.common.tagline,
+    applicationName: t.common.appName,
+    manifest: '/manifest.webmanifest',
+  };
+}
+
+export const viewport: Viewport = {
+  themeColor: '#C8102E',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const locale = getLocale();
   return (
-    <html lang={defaultLocale} dir="rtl">
-      <body>{children}</body>
+    <html
+      lang={locale}
+      dir={dirFor(locale)}
+      className={`${arabicFont.variable} ${latinFont.variable}`}
+    >
+      <body>
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
   );
 }

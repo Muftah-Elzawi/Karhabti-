@@ -6,8 +6,9 @@ import { libyanPhoneSchema } from './phone';
 
 export const registerSchema = z.object({
   phone: libyanPhoneSchema,
-  password: z.string().min(8).max(72),
-  displayName: z.string().trim().min(2).max(50),
+  // Messages are stable i18n keys — clients map them to localized copy.
+  password: z.string().min(8, 'password_too_short').max(72),
+  displayName: z.string().trim().min(2, 'displayName_too_short').max(50),
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
 
