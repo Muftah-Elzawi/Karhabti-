@@ -21,6 +21,9 @@ coverage/
 playwright-report/
 test-results/
 
+# local-only infra tweaks (e.g. alternate ports)
+docker-compose.override.yml
+
 # misc
 .DS_Store
 *.log
