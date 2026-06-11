@@ -9,9 +9,10 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3001),
   DATABASE_URL: z.string().min(1),
   REDIS_URL: z.string().min(1),
-  // Required from Phase 1, Step 5 (auth module); optional until then.
-  JWT_ACCESS_SECRET: z.string().optional(),
-  JWT_REFRESH_SECRET: z.string().optional(),
+  JWT_ACCESS_SECRET: z.string().min(32, 'use a random secret of at least 32 characters'),
+  JWT_REFRESH_SECRET: z.string().min(32, 'use a random secret of at least 32 characters'),
+  JWT_ACCESS_TTL: z.string().default('15m'),
+  JWT_REFRESH_TTL_DAYS: z.coerce.number().int().positive().default(30),
   SENTRY_DSN: z.string().optional(),
   // Comma-separated list of allowed browser origins.
   CORS_ORIGINS: z.string().default('http://localhost:3000,http://localhost:3002'),

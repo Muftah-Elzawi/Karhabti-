@@ -8,7 +8,10 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { EnvelopeInterceptor } from './common/interceptors/envelope.interceptor';
 import type { Env } from './config/env';
 import { validateEnv } from './config/env';
+import { AuditModule } from './infrastructure/audit/audit.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
+import { SmsModule } from './infrastructure/sms/sms.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
 
 @Module({
@@ -30,9 +33,12 @@ import { HealthModule } from './modules/health/health.module';
         };
       },
     }),
-    // Global default rate limit; auth/OTP endpoints get stricter limits in Step 5.
+    // Global default rate limit; auth/OTP endpoints declare stricter @Throttle limits.
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 100 }]),
     DatabaseModule,
+    AuditModule,
+    SmsModule,
+    AuthModule,
     HealthModule,
   ],
   providers: [
