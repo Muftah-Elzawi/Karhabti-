@@ -1,16 +1,16 @@
-/* Karhabti design tokens (KARHABTI_BUILD_PROMPT.md §4) as CSS variables.
+/* Karhabti design tokens — "Diagnose Drive" identity (brand/README.md).
    Source of truth: packages/config/tamagui/tokens.ts — keep in sync until
    full Tamagui wiring lands with packages/ui (Phase 2). */
 :root {
   /* palette */
-  --color-brand: #c8102e; /* Libyan red — primary actions */
-  --color-text: #1a1a1a; /* charcoal */
-  --color-accent: #e8a33d; /* sand amber */
-  --color-bg: #faf7f2; /* warm white — never pure white */
-  --color-success: #5c7a2a; /* olive green */
+  --color-brand: #3b1e4a; /* aubergine — primary actions, brand */
+  --color-text: #1e1e1e; /* deep charcoal */
+  --color-accent: #b86f3d; /* copper bronze — accents, the needle */
+  --color-bg: #f2e8db; /* warm beige — never pure white */
+  --color-success: #5c7a2a; /* functional green (not a brand color) */
   --color-surface: #ffffff;
-  --color-border: #e5ded3;
-  --color-text-muted: #6b6258;
+  --color-border: #e0d3c0;
+  --color-text-muted: #485563; /* slate gray */
   --color-danger: #b3261e;
 
   /* type scale (px) */
@@ -85,6 +85,11 @@ a:hover {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+}
+
+.logo {
+  border-radius: var(--radius-lg);
+  margin-block-end: var(--space-md);
 }
 
 .brand {

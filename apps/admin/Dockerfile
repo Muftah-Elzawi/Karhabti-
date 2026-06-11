@@ -4,6 +4,8 @@
 
 FROM node:22-alpine AS build
 RUN corepack enable
+# Standalone output is produced ONLY inside Docker (see next.config.mjs).
+ENV NEXT_OUTPUT=standalone
 WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile --filter @karhabti/admin...

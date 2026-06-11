@@ -49,33 +49,33 @@ English (LTR). **Default currency:** Libyan Dinar (LYD).
 
 ## 2. Tech stack (do not substitute without asking)
 
-| Layer | Choice |
-|---|---|
-| Monorepo tooling | pnpm workspaces + Turborepo |
-| Language | TypeScript (strict) everywhere |
-| Backend | NestJS 10 |
-| ORM | Prisma |
-| Database | PostgreSQL |
-| Cache / queues | Redis + BullMQ |
-| Web frontend | Next.js 14 (App Router), PWA-enabled |
-| Mobile frontend | React Native + Expo (added in a later phase) |
-| Shared UI | Tamagui (works web + native) |
-| Admin UI | Next.js + shadcn/ui (web-only, internal) |
-| State (clients) | TanStack Query + Zustand |
-| Validation | Zod (shared) |
-| Auth | JWT (access + refresh); NextAuth on web, Expo SecureStore on mobile |
-| Payments | Plutu REST API (COD + Sadad + Adfali at launch) |
-| File storage | Cloudflare R2 (S3-compatible) |
-| SMS / OTP | Twilio or a Libyan SMS gateway (abstract behind an interface) |
-| Push notifications | Firebase Cloud Messaging (later phase) |
-| Real-time | Socket.IO |
-| Error tracking | Sentry |
-| Logging | Pino (structured JSON) |
-| Testing | Jest (unit/integration) + Playwright (E2E) |
-| API docs | OpenAPI via @nestjs/swagger |
-| Containerization | Docker + docker-compose |
-| CI/CD | GitHub Actions |
-| Dev environment | GitHub Codespaces (browser-based) |
+| Layer              | Choice                                                              |
+| ------------------ | ------------------------------------------------------------------- |
+| Monorepo tooling   | pnpm workspaces + Turborepo                                         |
+| Language           | TypeScript (strict) everywhere                                      |
+| Backend            | NestJS 10                                                           |
+| ORM                | Prisma                                                              |
+| Database           | PostgreSQL                                                          |
+| Cache / queues     | Redis + BullMQ                                                      |
+| Web frontend       | Next.js 14 (App Router), PWA-enabled                                |
+| Mobile frontend    | React Native + Expo (added in a later phase)                        |
+| Shared UI          | Tamagui (works web + native)                                        |
+| Admin UI           | Next.js + shadcn/ui (web-only, internal)                            |
+| State (clients)    | TanStack Query + Zustand                                            |
+| Validation         | Zod (shared)                                                        |
+| Auth               | JWT (access + refresh); NextAuth on web, Expo SecureStore on mobile |
+| Payments           | Plutu REST API (COD + Sadad + Adfali at launch)                     |
+| File storage       | Cloudflare R2 (S3-compatible)                                       |
+| SMS / OTP          | Twilio or a Libyan SMS gateway (abstract behind an interface)       |
+| Push notifications | Firebase Cloud Messaging (later phase)                              |
+| Real-time          | Socket.IO                                                           |
+| Error tracking     | Sentry                                                              |
+| Logging            | Pino (structured JSON)                                              |
+| Testing            | Jest (unit/integration) + Playwright (E2E)                          |
+| API docs           | OpenAPI via @nestjs/swagger                                         |
+| Containerization   | Docker + docker-compose                                             |
+| CI/CD              | GitHub Actions                                                      |
+| Dev environment    | GitHub Codespaces (browser-based)                                   |
 
 ---
 
@@ -153,13 +153,14 @@ CI. The architecture is enforced by the machine.
 
 **Name:** Karhabti / كرهبتي (this exact Latin spelling everywhere).
 
-**Palette (use as design tokens):**
+**Palette (use as design tokens — "Diagnose Drive" identity, see `brand/README.md`):**
 
-- Libyan red `#C8102E` — primary actions, brand
-- Charcoal `#1A1A1A` — text, dark surfaces
-- Sand amber `#E8A33D` — accents, highlights, indicators
-- Warm white `#FAF7F2` — backgrounds (never pure white)
-- Olive green `#5C7A2A` — success states, "in stock"/"available" badges
+- Aubergine `#3B1E4A` — primary actions, brand, dark surfaces
+- Copper bronze `#B86F3D` — accents, the needle, highlights
+- Slate gray `#485563` — secondary text, structure
+- Warm beige `#F2E8DB` — backgrounds (never pure white)
+- Deep charcoal `#1E1E1E` — body text on light surfaces
+- Functional green `#5C7A2A` — success states, "in stock"/"available" badges (not a brand color)
 
 **Design feel:** Warm, trustworthy, confident, Libyan-rooted, modern but not cold. Mobile-first.
 The car-care companion screens should feel alive and satisfying to check — think Apple Fitness

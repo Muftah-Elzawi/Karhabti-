@@ -10,6 +10,8 @@ export default function HomePage() {
 
   return (
     <main className="page page-center">
+      {/* eslint-disable-next-line @next/next/no-img-element -- static brand asset */}
+      <img src="/brand/karhabti-app-icon.svg" alt="" width={96} height={96} className="logo" />
       <h1 className="brand">{t.common.appName}</h1>
       <p className="tagline">{t.common.tagline}</p>
 

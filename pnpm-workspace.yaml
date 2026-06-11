@@ -9,3 +9,4 @@ onlyBuiltDependencies:
   - argon2
   - prisma
   - esbuild
+  - sharp

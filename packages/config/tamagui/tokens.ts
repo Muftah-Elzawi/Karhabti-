@@ -1,21 +1,25 @@
 /**
- * Karhabti design tokens (KARHABTI_BUILD_PROMPT.md §4).
+ * Karhabti design tokens — "Diagnose Drive" identity (see brand/README.md).
  *
  * Framework-free token definitions. The Tamagui `createTamagui` wiring that
- * consumes these lands with the web skeleton (Phase 1, Step 6).
+ * consumes these lands with packages/ui shared components (Phase 2).
  */
 
 export const palette = {
-  /** Libyan red — primary actions, brand */
-  libyanRed: '#C8102E',
-  /** Charcoal — text, dark surfaces */
-  charcoal: '#1A1A1A',
-  /** Sand amber — accents, highlights, indicators */
-  sandAmber: '#E8A33D',
-  /** Warm white — backgrounds (never pure white) */
-  warmWhite: '#FAF7F2',
-  /** Olive green — success states, "in stock"/"available" badges */
-  oliveGreen: '#5C7A2A',
+  /** Aubergine — primary brand, primary actions, dark surfaces */
+  aubergine: '#3B1E4A',
+  /** Copper bronze — accents, the needle, highlights */
+  copper: '#B86F3D',
+  /** Slate gray — secondary text, structure */
+  slate: '#485563',
+  /** Warm beige — backgrounds (never pure white) */
+  warmBeige: '#F2E8DB',
+  /** Deep charcoal — body text on light surfaces */
+  charcoal: '#1E1E1E',
+  /** White — text/art on dark surfaces */
+  white: '#FFFFFF',
+  /** Functional green — success states, "in stock"/"available" (not a brand color) */
+  success: '#5C7A2A',
 } as const;
 
 export const fontFamilies = {
