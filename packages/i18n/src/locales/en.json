@@ -3,5 +3,9 @@
     "appName": "Karhabti",
     "tagline": "Everything your car needs, in one place",
     "loading": "Loading…"
+  },
+  "locations": {
+    "tripoli": "Tripoli",
+    "benghazi": "Benghazi"
   }
 }

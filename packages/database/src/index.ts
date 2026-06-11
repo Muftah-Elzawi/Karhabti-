@@ -1,8 +1,8 @@
 /**
- * Prisma schema, migrations, and generated client live here.
+ * Prisma client + generated types. Consumed by apps/api ONLY — frontends get
+ * their types from @karhabti/api-client (enforced by the frontend ESLint
+ * preset in @karhabti/config).
  *
- * The full schema (KARHABTI_BUILD_PROMPT.md §5), first migration, and seed
- * script land in Phase 1, Step 3. This package is consumed by apps/api ONLY —
- * frontends get their types from @karhabti/api-client.
+ * Run `pnpm --filter @karhabti/database db:generate` after schema changes.
  */
-export {};
+export * from '@prisma/client';

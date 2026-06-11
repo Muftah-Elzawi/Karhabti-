@@ -1,3 +1,10 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# pnpm v10 blocks dependency build scripts by default; allow the ones we trust.
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - prisma
+  - esbuild

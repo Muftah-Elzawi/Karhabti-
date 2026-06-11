@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export * from './locations';
+
 export const localeSchema = z.enum(['ar', 'en']);
 
 /**
