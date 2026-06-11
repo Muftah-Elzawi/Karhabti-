@@ -16,9 +16,9 @@ module.exports = {
         patterns: [
           ...basePatterns,
           {
-            group: ['@karhabti/database', '@karhabti/database/*'],
+            group: ['@karhabti/database', '@karhabti/database/*', '@prisma/client', '.prisma/*'],
             message:
-              'The database package (Prisma) is consumed by apps/api ONLY. Frontends talk to the API over HTTP via @karhabti/api-client.',
+              'The database layer (Prisma) is consumed by apps/api ONLY. Frontends talk to the API over HTTP via @karhabti/api-client.',
           },
         ],
       },
