@@ -30,7 +30,7 @@ Every app is standalone-runnable and independently deployable. Dependency direct
 
 ## Prerequisites
 
-- **Node.js 20+** (Node 25 works; note `next dev` needs ≥22 — see troubleshooting)
+- **Node.js 20+** (developed on Node 25)
 - **pnpm 10** — `npm install -g pnpm@10` (Node 25 no longer bundles corepack)
 - **Docker Desktop** (Postgres + Redis run in containers)
 
@@ -140,11 +140,11 @@ docker exec karhabti--postgres-1 psql -U karhabti -d karhabti -c "SELECT action,
 
 ## Troubleshooting
 
-- **`next dev` crashes on Node 25** (`Cannot find module 'next/dist/pages/_app'`) — known
-  Next 14 / Node 25 incompatibility. Use Node 22 LTS for dev, or `next build && next start`.
+- **`Cannot find module 'next/dist/bin/next'` (or `_app`, or random missing packages)** — the
+  pnpm store got corrupted, usually by installing while an app was running. Fix: stop all node
+  processes, then `pnpm install --force`.
 - **Stop all running apps before `pnpm install` or `db:generate`** — a running API locks the
-  argon2/Prisma native binaries on Windows and corrupts the install (`EPERM` errors). Fix:
-  kill all node processes, `pnpm install --force`.
+  argon2/Prisma native binaries on Windows and corrupts the install (`EPERM` errors).
 - **Never delete `.next` with `Remove-Item -Recurse`** — use `cmd /c rmdir /s /q .next`
   (PowerShell 5.1 follows symlinks while deleting).
 - **Cookies in production builds**: `next start` marks session cookies `Secure`. For plain-HTTP
