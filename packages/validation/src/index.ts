@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export * from './auth';
+export * from './catalog';
 export * from './locations';
 export * from './phone';
 

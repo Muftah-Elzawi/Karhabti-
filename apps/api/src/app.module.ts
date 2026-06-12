@@ -12,7 +12,9 @@ import { AuditModule } from './infrastructure/audit/audit.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { SmsModule } from './infrastructure/sms/sms.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CatalogModule } from './modules/catalog/catalog.module';
 import { HealthModule } from './modules/health/health.module';
+import { ProvidersModule } from './modules/providers/providers.module';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { HealthModule } from './modules/health/health.module';
     AuditModule,
     SmsModule,
     AuthModule,
+    CatalogModule,
+    ProvidersModule,
     HealthModule,
   ],
   providers: [
