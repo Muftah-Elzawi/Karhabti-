@@ -4,6 +4,7 @@ export * from './auth';
 export * from './catalog';
 export * from './locations';
 export * from './phone';
+export * from './vehicles';
 
 export const localeSchema = z.enum(['ar', 'en']);
 
