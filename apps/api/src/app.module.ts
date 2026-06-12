@@ -13,7 +13,9 @@ import { DatabaseModule } from './infrastructure/database/database.module';
 import { SmsModule } from './infrastructure/sms/sms.module';
 import { AddressesModule } from './modules/addresses/addresses.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { BookingsModule } from './modules/bookings/bookings.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { HealthModule } from './modules/health/health.module';
 import { ProvidersModule } from './modules/providers/providers.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
@@ -44,7 +46,9 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     SmsModule,
     AuthModule,
     AddressesModule,
+    BookingsModule,
     CatalogModule,
+    NotificationsModule,
     ProvidersModule,
     VehiclesModule,
     HealthModule,

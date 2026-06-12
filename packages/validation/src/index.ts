@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export * from './addresses';
 export * from './auth';
+export * from './bookings';
 export * from './catalog';
 export * from './locations';
 export * from './phone';
