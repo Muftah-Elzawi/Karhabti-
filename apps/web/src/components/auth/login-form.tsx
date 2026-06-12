@@ -53,7 +53,8 @@ export function LoginForm({ t, errorsT }: { t: AuthMessages; errorsT: ErrorMessa
       setFormError(translateError(errorsT, result.error.code));
       return;
     }
-    router.push('/profile');
+    // Providers land on their jobs board; everyone else on the profile.
+    router.push(result.data.user.role === 'PROVIDER' ? '/provider' : '/profile');
     router.refresh();
   }
 

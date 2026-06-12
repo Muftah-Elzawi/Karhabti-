@@ -14,6 +14,20 @@ export function errorJson(code: string, status: number, details?: unknown): Next
   );
 }
 
+/** Route-handler wrapper for body-less calls: forwards API errors as envelopes. */
+export async function forwardingApiErrors(
+  handler: () => Promise<NextResponse>,
+): Promise<NextResponse> {
+  try {
+    return await handler();
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return errorJson(error.code, error.status > 0 ? error.status : 502, error.details);
+    }
+    return errorJson('INTERNAL_ERROR', 500);
+  }
+}
+
 /**
  * Route-handler wrapper: validates the body with the SHARED Zod schema (the
  * same one the API enforces), then forwards API errors as envelopes.
@@ -32,12 +46,5 @@ export async function withParsedBody<T>(
       parsed.error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })),
     );
   }
-  try {
-    return await handler(parsed.data);
-  } catch (error) {
-    if (error instanceof ApiError) {
-      return errorJson(error.code, error.status > 0 ? error.status : 502, error.details);
-    }
-    return errorJson('INTERNAL_ERROR', 500);
-  }
+  return forwardingApiErrors(() => handler(parsed.data));
 }

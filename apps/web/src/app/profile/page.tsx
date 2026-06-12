@@ -74,6 +74,14 @@ export default async function ProfilePage() {
           </div>
         </dl>
 
+        {user.role === 'PROVIDER' ? (
+          <div style={{ marginBlockStart: 'var(--space-lg)' }}>
+            <Link className="btn btn-primary" href="/provider">
+              {t.provider.jobsTitle}
+            </Link>
+          </div>
+        ) : null}
+
         <div style={{ marginBlockStart: 'var(--space-lg)' }}>
           <LogoutButton label={t.auth.logout} />
         </div>

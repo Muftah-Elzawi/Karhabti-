@@ -110,6 +110,22 @@
     "yourReview": "Your review",
     "cancelledReason": "Reason"
   },
+  "provider": {
+    "jobsTitle": "My jobs",
+    "empty": "No jobs assigned yet",
+    "all": "All",
+    "scheduledFor": "Scheduled for",
+    "vehicle": "Car",
+    "address": "Address",
+    "price": "Price",
+    "customerNotes": "Customer notes",
+    "accept": "Accept",
+    "decline": "Decline",
+    "confirmDecline": "Confirm decline",
+    "declineHint": "The job goes back to the pool and an admin will reassign it",
+    "start": "Start job",
+    "complete": "Mark completed"
+  },
   "errors": {
     "VALIDATION_ERROR": "Check the entered data",
     "PHONE_TAKEN": "This phone is already registered",
@@ -128,6 +144,9 @@
     "VEHICLE_NOT_FOUND": "Vehicle not found",
     "ADDRESS_NOT_FOUND": "Address not found",
     "BOOKING_NOT_FOUND": "Booking not found",
+    "FORBIDDEN": "You do not have access to this",
+    "NOT_A_PROVIDER": "This account is not a service provider",
+    "INVALID_TRANSITION": "This action is no longer available for this job",
     "CANNOT_CANCEL": "This booking can no longer be cancelled",
     "BOOKING_NOT_COMPLETED": "You can review after the service is completed",
     "ALREADY_REVIEWED": "You already reviewed this booking",

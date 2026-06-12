@@ -110,6 +110,22 @@
     "yourReview": "تقييمك",
     "cancelledReason": "السبب"
   },
+  "provider": {
+    "jobsTitle": "مهامي",
+    "empty": "لا توجد مهام مسندة إليك بعد",
+    "all": "الكل",
+    "scheduledFor": "الموعد",
+    "vehicle": "السيارة",
+    "address": "العنوان",
+    "price": "السعر",
+    "customerNotes": "ملاحظات العميل",
+    "accept": "قبول",
+    "decline": "رفض",
+    "confirmDecline": "تأكيد الرفض",
+    "declineHint": "تعود المهمة إلى القائمة وسيعيد المدير إسنادها",
+    "start": "بدء التنفيذ",
+    "complete": "إنهاء المهمة"
+  },
   "errors": {
     "VALIDATION_ERROR": "تحقق من البيانات المدخلة",
     "PHONE_TAKEN": "هذا الرقم مسجّل من قبل",
@@ -128,6 +144,9 @@
     "VEHICLE_NOT_FOUND": "السيارة غير موجودة",
     "ADDRESS_NOT_FOUND": "العنوان غير موجود",
     "BOOKING_NOT_FOUND": "الحجز غير موجود",
+    "FORBIDDEN": "ليس لديك صلاحية الوصول",
+    "NOT_A_PROVIDER": "هذا الحساب ليس حساب مزوّد خدمة",
+    "INVALID_TRANSITION": "هذا الإجراء لم يعد متاحًا لهذه المهمة",
     "CANNOT_CANCEL": "لا يمكن إلغاء هذا الحجز الآن",
     "BOOKING_NOT_COMPLETED": "يمكن التقييم بعد اكتمال الخدمة فقط",
     "ALREADY_REVIEWED": "سبق أن قيّمت هذا الحجز",
