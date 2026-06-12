@@ -16,8 +16,14 @@ export default function HomePage() {
       <p className="tagline">{t.common.tagline}</p>
 
       {isAuthenticated ? (
-        <div className="btn-row">
-          <Link className="btn btn-primary" href="/profile">
+        <div className="home-nav">
+          <Link className="btn btn-primary" href="/services">
+            {t.services.title}
+          </Link>
+          <Link className="btn btn-primary" href="/bookings">
+            {t.bookings.title}
+          </Link>
+          <Link className="btn btn-ghost" href="/profile">
             {t.auth.profileTitle}
           </Link>
         </div>

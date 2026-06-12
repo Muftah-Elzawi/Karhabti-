@@ -22,6 +22,73 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
+export interface ServiceCategoryDto {
+  id: string;
+  slug: string;
+  name: string;
+  icon: string | null;
+  sortOrder: number;
+}
+
+export interface ServiceDto {
+  id: string;
+  categoryId: string;
+  name: string;
+  description: string;
+  basePriceLYD: string;
+  durationMinutes: number;
+}
+
+export interface VehicleMakeDto {
+  id: string;
+  name: string;
+  slug: string;
+  models: { id: string; name: string; slug: string }[];
+}
+
+export interface VehicleDto {
+  id: string;
+  make: { id: string; name: string; slug: string };
+  model: { id: string; name: string; slug: string };
+  year: number;
+  nickname: string | null;
+  mileageKm: number;
+  isDefault: boolean;
+}
+
+export interface AddressDto {
+  id: string;
+  label: string;
+  governorate: string;
+  city: string;
+  area: string;
+  details: string | null;
+  isDefault: boolean;
+}
+
+export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+
+export interface BookingDto {
+  id: string;
+  status: BookingStatus;
+  scheduledFor: string;
+  priceLYD: string;
+  notes: string | null;
+  service: { id: string; name: string; durationMinutes: number };
+  vehicle: { id: string; label: string };
+  address: { id: string; label: string; governorate: string; area: string };
+  provider: { id: string; businessName: string } | null;
+  review: { rating: number; body: string | null } | null;
+  cancellationReason: string | null;
+  timeline: {
+    createdAt: string;
+    confirmedAt: string | null;
+    inProgressAt: string | null;
+    completedAt: string | null;
+    cancelledAt: string | null;
+  };
+}
+
 export class ApiError extends Error {
   constructor(
     readonly code: string,

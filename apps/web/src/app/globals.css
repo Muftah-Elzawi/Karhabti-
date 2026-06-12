@@ -273,10 +273,292 @@ h1.title {
   cursor: default;
 }
 
+/* ---- catalog & bookings ---- */
+
+.page-head {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block-end: var(--space-md);
+}
+
+.page-head .title {
+  margin: 0;
+}
+
+.chip-row {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-md);
+}
+
+.chip {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full, 9999px);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+}
+
+.chip:hover {
+  text-decoration: none;
+}
+
+.chip-active {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #fff;
+}
+
+.card-list {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.card-list .card {
+  max-width: none;
+}
+
+.service-card,
+.booking-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.booking-card {
+  color: inherit;
+}
+
+.booking-card:hover {
+  text-decoration: none;
+  border-color: var(--color-brand);
+}
+
+.service-name {
+  font-size: var(--text-title);
+  font-weight: 500;
+  margin: 0 0 var(--space-xs);
+}
+
+.service-desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  margin: 0 0 var(--space-xs);
+}
+
+.service-meta {
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.service-price {
+  color: var(--color-brand);
+  font-weight: 500;
+}
+
+.btn-fit {
+  width: auto;
+  white-space: nowrap;
+}
+
+.home-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ---- wizard ---- */
+
+.wizard {
+  max-width: 560px;
+}
+
+.wizard-steps {
+  display: flex;
+  gap: var(--space-xs);
+  list-style: none;
+  margin: 0 0 var(--space-lg);
+  padding: 0;
+}
+
+.wizard-step {
+  flex: 1;
+  text-align: center;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+  padding-block-end: var(--space-xs);
+  border-block-end: 3px solid var(--color-border);
+}
+
+.wizard-step-active {
+  color: var(--color-brand);
+  border-block-end-color: var(--color-brand);
+  font-weight: 500;
+}
+
+.wizard-step-done {
+  border-block-end-color: var(--color-accent);
+}
+
+.wizard-title {
+  font-size: var(--text-title);
+  font-weight: 500;
+  margin: 0 0 var(--space-md);
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-md);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+}
+
+.option-active {
+  border-color: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) 5%, transparent);
+}
+
+.quick-form {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-block: var(--space-md);
+}
+
+.field-row {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.field-row .field {
+  flex: 1;
+}
+
+section .btn + .btn,
+section .btn-row {
+  margin-block-start: var(--space-sm);
+}
+
+/* ---- status badges & timeline ---- */
+
+.badge {
+  font-size: var(--text-caption);
+  font-weight: 500;
+  border-radius: var(--radius-full, 9999px);
+  padding: 2px var(--space-md);
+  white-space: nowrap;
+}
+
+.badge-pending {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  color: #8a4f23;
+}
+
+.badge-confirmed {
+  background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+  color: var(--color-brand);
+}
+
+.badge-progress {
+  background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
+  color: var(--color-text-muted);
+}
+
+.badge-completed {
+  background: color-mix(in srgb, var(--color-success) 15%, transparent);
+  color: var(--color-success);
+}
+
+.badge-cancelled {
+  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  color: var(--color-danger);
+}
+
+.timeline {
+  list-style: none;
+  margin: var(--space-lg) 0;
+  padding: 0;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-block: var(--space-sm);
+  position: relative;
+}
+
+.timeline-item + .timeline-item {
+  border-block-start: 1px dashed var(--color-border);
+}
+
+.timeline-dot {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.timeline-time {
+  margin-inline-start: auto;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+.stars {
+  display: flex;
+  gap: var(--space-xs);
+  margin-block-end: var(--space-md);
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--color-border);
+  cursor: pointer;
+  padding: 0;
+}
+
+.star-active {
+  color: var(--color-accent);
+}
+
+.btn-danger-text {
+  color: var(--color-danger);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .btn,
   .input,
-  .locale-btn {
+  .locale-btn,
+  .chip,
+  .option {
     transition:
       background-color 150ms ease,
       border-color 150ms ease;
