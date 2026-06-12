@@ -8,7 +8,12 @@ import {
 import type { User } from '@prisma/client';
 import * as argon2 from 'argon2';
 
-import type { LoginInput, RegisterInput, VerifyOtpInput } from '@karhabti/validation';
+import type {
+  LoginInput,
+  RegisterInput,
+  UpdateProfileInput,
+  VerifyOtpInput,
+} from '@karhabti/validation';
 
 import { AuditLogRepository } from '../../../infrastructure/audit/audit-log.repository';
 import type { TokenPair } from './token.service';
@@ -20,6 +25,7 @@ import { UserRepository } from '../infrastructure/user.repository';
 export interface UserProfile {
   id: string;
   phone: string;
+  email: string | null;
   displayName: string;
   role: User['role'];
   locale: User['locale'];
@@ -35,6 +41,7 @@ function toProfile(user: User): UserProfile {
   return {
     id: user.id,
     phone: user.phone,
+    email: user.email,
     displayName: user.displayName,
     role: user.role,
     locale: user.locale,
@@ -138,11 +145,14 @@ export class AuthService {
   }
 
   async login(input: LoginInput): Promise<AuthResult> {
-    const user = await this.userRepository.findByPhone(input.phone);
-    // Same error for unknown phone and wrong password — no account enumeration.
+    // The identifier is a Libyan phone or an email (validated upstream).
+    const user = input.identifier.includes('@')
+      ? await this.userRepository.findByEmail(input.identifier)
+      : await this.userRepository.findByPhone(input.identifier);
+    // Same error for unknown identifier and wrong password — no account enumeration.
     const invalidCredentials = new UnauthorizedException({
       code: 'INVALID_CREDENTIALS',
-      message: 'Wrong phone or password',
+      message: 'Wrong phone/email or password',
     });
     if (!user) throw invalidCredentials;
 
@@ -150,9 +160,11 @@ export class AuthService {
     if (!passwordOk) throw invalidCredentials;
 
     if (!user.isPhoneVerified) {
+      // Password already proven — exposing the phone lets the client resume OTP.
       throw new ForbiddenException({
         code: 'PHONE_NOT_VERIFIED',
         message: 'Verify your phone first',
+        details: { phone: user.phone },
       });
     }
 
@@ -231,6 +243,32 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User not found' });
     }
+    return toProfile(user);
+  }
+
+  /** Updates displayName / email / locale. Email enables email login. */
+  async updateProfile(userId: string, input: UpdateProfileInput): Promise<UserProfile> {
+    const before = await this.userRepository.findById(userId);
+    if (!before) {
+      throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'User not found' });
+    }
+
+    if (input.email && input.email !== before.email) {
+      const taken = await this.userRepository.findByEmail(input.email);
+      if (taken && taken.id !== userId) {
+        throw new ConflictException({ code: 'EMAIL_TAKEN', message: 'Email already in use' });
+      }
+    }
+
+    const user = await this.userRepository.updateProfile(userId, input);
+    await this.auditLog.append({
+      actorId: userId,
+      action: 'auth.profile_update',
+      entityType: 'User',
+      entityId: userId,
+      before: { displayName: before.displayName, email: before.email, locale: before.locale },
+      after: { displayName: user.displayName, email: user.email, locale: user.locale },
+    });
     return toProfile(user);
   }
 }

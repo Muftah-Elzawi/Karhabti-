@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
@@ -7,6 +7,7 @@ import type {
   RefreshTokenInput,
   RegisterInput,
   RequestOtpInput,
+  UpdateProfileInput,
   VerifyOtpInput,
 } from '@karhabti/validation';
 import {
@@ -14,6 +15,7 @@ import {
   refreshTokenSchema,
   registerSchema,
   requestOtpSchema,
+  updateProfileSchema,
   verifyOtpSchema,
 } from '@karhabti/validation';
 
@@ -92,13 +94,17 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   @Throttle(AUTH_THROTTLE)
-  @ApiOperation({ summary: 'Login with phone + password' })
+  @ApiOperation({ summary: 'Login with phone-or-email + password' })
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['phone', 'password'],
+      required: ['identifier', 'password'],
       properties: {
-        phone: { type: 'string', example: '0912345678' },
+        identifier: {
+          type: 'string',
+          description: 'Libyan phone or email',
+          example: '0912345678',
+        },
         password: { type: 'string' },
       },
     },
@@ -145,5 +151,28 @@ export class AuthController {
   @ApiOperation({ summary: 'Profile of the authenticated user' })
   me(@CurrentUser() user: AuthenticatedUser): Promise<UserProfile> {
     return this.authService.getProfile(user.id);
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Update profile (displayName / email / locale); email enables email login',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        displayName: { type: 'string' },
+        email: { type: 'string', example: 'you@example.com' },
+        locale: { type: 'string', enum: ['ar', 'en'] },
+      },
+    },
+  })
+  updateMe(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body(new ZodValidationPipe(updateProfileSchema)) input: UpdateProfileInput,
+  ): Promise<UserProfile> {
+    return this.authService.updateProfile(user.id, input);
   }
 }

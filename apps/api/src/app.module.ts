@@ -15,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { HealthModule } from './modules/health/health.module';
 import { ProvidersModule } from './modules/providers/providers.module';
+import { VehiclesModule } from './modules/vehicles/vehicles.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ProvidersModule } from './modules/providers/providers.module';
     AuthModule,
     CatalogModule,
     ProvidersModule,
+    VehiclesModule,
     HealthModule,
   ],
   providers: [

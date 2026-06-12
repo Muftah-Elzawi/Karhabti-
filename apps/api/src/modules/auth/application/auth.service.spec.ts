@@ -26,10 +26,12 @@ describe('AuthService', () => {
   const createMocks = () => {
     const userRepository = {
       findByPhone: jest.fn(),
+      findByEmail: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       updateUnverified: jest.fn(),
       markPhoneVerified: jest.fn(),
+      updateProfile: jest.fn(),
     };
     const refreshTokenRepository = {
       create: jest.fn(),
@@ -135,46 +137,101 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('returns tokens for valid credentials', async () => {
+    it('returns tokens for valid phone credentials', async () => {
       const m = createMocks();
       const passwordHash = await argon2.hash('correct-password', { type: argon2.argon2id });
       m.userRepository.findByPhone.mockResolvedValue({ ...baseUser, passwordHash });
 
-      const result = await m.service.login({ phone: baseUser.phone, password: 'correct-password' });
+      const result = await m.service.login({
+        identifier: baseUser.phone,
+        password: 'correct-password',
+      });
       expect(result.refreshToken).toBe('rt');
+      expect(m.userRepository.findByPhone).toHaveBeenCalledWith(baseUser.phone);
       expect(m.auditLog.append).toHaveBeenCalledWith(
         expect.objectContaining({ action: 'auth.login' }),
       );
     });
 
-    it('uses the same error for unknown phone and wrong password', async () => {
+    it('logs in by email when the identifier contains @', async () => {
+      const m = createMocks();
+      const passwordHash = await argon2.hash('correct-password', { type: argon2.argon2id });
+      m.userRepository.findByEmail.mockResolvedValue({
+        ...baseUser,
+        email: 'me@example.com',
+        passwordHash,
+      });
+
+      const result = await m.service.login({
+        identifier: 'me@example.com',
+        password: 'correct-password',
+      });
+      expect(result.accessToken).toBe('at');
+      expect(m.userRepository.findByEmail).toHaveBeenCalledWith('me@example.com');
+      expect(m.userRepository.findByPhone).not.toHaveBeenCalled();
+    });
+
+    it('uses the same error for unknown identifier and wrong password', async () => {
       const m = createMocks();
       m.userRepository.findByPhone.mockResolvedValue(null);
       const unknownPhone = m.service
-        .login({ phone: '0911111111', password: 'x' })
+        .login({ identifier: '0911111111', password: 'x' })
         .catch((e: UnauthorizedException) => e.getResponse());
 
       const passwordHash = await argon2.hash('correct-password', { type: argon2.argon2id });
       m.userRepository.findByPhone.mockResolvedValue({ ...baseUser, passwordHash });
       const wrongPassword = m.service
-        .login({ phone: baseUser.phone, password: 'wrong' })
+        .login({ identifier: baseUser.phone, password: 'wrong' })
         .catch((e: UnauthorizedException) => e.getResponse());
 
       expect(await unknownPhone).toEqual(await wrongPassword);
     });
 
-    it('blocks unverified phones with PHONE_NOT_VERIFIED', async () => {
+    it('blocks unverified phones with PHONE_NOT_VERIFIED carrying the phone', async () => {
       const m = createMocks();
       const passwordHash = await argon2.hash('correct-password', { type: argon2.argon2id });
-      m.userRepository.findByPhone.mockResolvedValue({
+      m.userRepository.findByEmail.mockResolvedValue({
         ...baseUser,
+        email: 'me@example.com',
         passwordHash,
         isPhoneVerified: false,
       });
 
+      const error = await m.service
+        .login({ identifier: 'me@example.com', password: 'correct-password' })
+        .catch((e: ForbiddenException) => e);
+      expect(error).toBeInstanceOf(ForbiddenException);
+      expect((error as ForbiddenException).getResponse()).toEqual(
+        expect.objectContaining({ details: { phone: baseUser.phone } }),
+      );
+    });
+  });
+
+  describe('updateProfile', () => {
+    it('sets the email after checking uniqueness and audits', async () => {
+      const m = createMocks();
+      m.userRepository.findById.mockResolvedValue(baseUser);
+      m.userRepository.findByEmail.mockResolvedValue(null);
+      m.userRepository.updateProfile.mockResolvedValue({
+        ...baseUser,
+        email: 'me@example.com',
+      });
+
+      const profile = await m.service.updateProfile(baseUser.id, { email: 'me@example.com' });
+      expect(profile.email).toBe('me@example.com');
+      expect(m.auditLog.append).toHaveBeenCalledWith(
+        expect.objectContaining({ action: 'auth.profile_update' }),
+      );
+    });
+
+    it('409s when the email belongs to another account', async () => {
+      const m = createMocks();
+      m.userRepository.findById.mockResolvedValue(baseUser);
+      m.userRepository.findByEmail.mockResolvedValue({ ...baseUser, id: 'other-user' });
+
       await expect(
-        m.service.login({ phone: baseUser.phone, password: 'correct-password' }),
-      ).rejects.toBeInstanceOf(ForbiddenException);
+        m.service.updateProfile(baseUser.id, { email: 'taken@example.com' }),
+      ).rejects.toBeInstanceOf(ConflictException);
     });
   });
 

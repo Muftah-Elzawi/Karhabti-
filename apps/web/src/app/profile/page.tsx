@@ -56,6 +56,14 @@ export default async function ProfilePage() {
               ) : null}
             </dd>
           </div>
+          {user.email ? (
+            <div className="profile-row">
+              <dt>{t.auth.email}</dt>
+              <dd>
+                <bdi dir="ltr">{user.email}</bdi>
+              </dd>
+            </div>
+          ) : null}
           <div className="profile-row">
             <dt>{t.auth.role}</dt>
             <dd>{roleLabel}</dd>

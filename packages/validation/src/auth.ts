@@ -12,11 +12,34 @@ export const registerSchema = z.object({
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
 
+export const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .email({ message: 'invalid_email' })
+  .max(254);
+
+/** Login accepts a Libyan phone OR an email address. */
+export const loginIdentifierSchema = z.union([libyanPhoneSchema, emailSchema], {
+  errorMap: () => ({ message: 'invalid_identifier' }),
+});
+
 export const loginSchema = z.object({
-  phone: libyanPhoneSchema,
+  identifier: loginIdentifierSchema,
   password: z.string().min(1),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const updateProfileSchema = z
+  .object({
+    displayName: z.string().trim().min(2, 'displayName_too_short').max(50).optional(),
+    // TODO: email ownership verification (magic link) before launch — for now
+    // email only enables login and is uniqueness-checked.
+    email: emailSchema.optional(),
+    locale: z.enum(['ar', 'en']).optional(),
+  })
+  .refine((value) => Object.keys(value).length > 0, { message: 'empty_update' });
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 
 export const requestOtpSchema = z.object({
   phone: libyanPhoneSchema,

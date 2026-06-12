@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import type { FieldErrors } from '@karhabti/validation';
-import { flattenFieldErrors, loginSchema } from '@karhabti/validation';
+import { flattenFieldErrors, libyanPhoneSchema, loginSchema } from '@karhabti/validation';
 
 import type { UserProfile } from '@/lib/api';
 import { postJson } from '@/lib/client-api';
@@ -13,7 +13,7 @@ import { translateError } from './messages';
 
 export function LoginForm({ t, errorsT }: { t: AuthMessages; errorsT: ErrorMessages }) {
   const router = useRouter();
-  const [fields, setFields] = useState({ phone: '', password: '' });
+  const [fields, setFields] = useState({ identifier: '', password: '' });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -37,9 +37,18 @@ export function LoginForm({ t, errorsT }: { t: AuthMessages; errorsT: ErrorMessa
     setSubmitting(false);
     if (!result.ok) {
       if (result.error.code === 'PHONE_NOT_VERIFIED') {
-        // Finish verification instead — ask the verify screen to send a code.
-        router.push(`/verify?phone=${encodeURIComponent(parsed.data.phone)}&resend=1`);
-        return;
+        // Resume verification — the API returns the account's phone (the
+        // identifier may have been an email).
+        const details = result.error.details as { phone?: string } | undefined;
+        const phone =
+          details?.phone ??
+          (libyanPhoneSchema.safeParse(parsed.data.identifier).success
+            ? parsed.data.identifier
+            : null);
+        if (phone) {
+          router.push(`/verify?phone=${encodeURIComponent(phone)}&resend=1`);
+          return;
+        }
       }
       setFormError(translateError(errorsT, result.error.code));
       return;
@@ -53,19 +62,18 @@ export function LoginForm({ t, errorsT }: { t: AuthMessages; errorsT: ErrorMessa
       {formError ? <p className="form-error">{formError}</p> : null}
 
       <label className="field">
-        <span className="field-label">{t.phone}</span>
+        <span className="field-label">{t.identifier}</span>
         <input
           className="input"
-          type="tel"
+          type="text"
           dir="ltr"
-          inputMode="numeric"
-          autoComplete="tel-national"
-          placeholder={t.phonePlaceholder}
-          value={fields.phone}
-          onChange={set('phone')}
+          autoComplete="username"
+          placeholder={t.identifierPlaceholder}
+          value={fields.identifier}
+          onChange={set('identifier')}
         />
-        {fieldErrors['phone'] ? (
-          <span className="field-error">{translateError(errorsT, fieldErrors['phone'])}</span>
+        {fieldErrors['identifier'] ? (
+          <span className="field-error">{translateError(errorsT, fieldErrors['identifier'])}</span>
         ) : null}
       </label>
 
