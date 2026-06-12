@@ -11,6 +11,7 @@ import { validateEnv } from './config/env';
 import { AuditModule } from './infrastructure/audit/audit.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { SmsModule } from './infrastructure/sms/sms.module';
+import { AddressesModule } from './modules/addresses/addresses.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { HealthModule } from './modules/health/health.module';
@@ -42,6 +43,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     AuditModule,
     SmsModule,
     AuthModule,
+    AddressesModule,
     CatalogModule,
     ProvidersModule,
     VehiclesModule,
