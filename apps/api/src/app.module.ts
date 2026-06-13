@@ -10,6 +10,7 @@ import type { Env } from './config/env';
 import { validateEnv } from './config/env';
 import { AuditModule } from './infrastructure/audit/audit.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
+import { PlutuModule } from './infrastructure/plutu/plutu.module';
 import { SmsModule } from './infrastructure/sms/sms.module';
 import { AddressesModule } from './modules/addresses/addresses.module';
 import { AuditLogsModule } from './modules/audit/audit-logs.module';
@@ -18,6 +19,7 @@ import { BookingsModule } from './modules/bookings/bookings.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { HealthModule } from './modules/health/health.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 import { ProvidersModule } from './modules/providers/providers.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
 
@@ -45,12 +47,14 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     DatabaseModule,
     AuditModule,
     SmsModule,
+    PlutuModule,
     AuthModule,
     AddressesModule,
     AuditLogsModule,
     BookingsModule,
     CatalogModule,
     NotificationsModule,
+    PaymentsModule,
     ProvidersModule,
     VehiclesModule,
     HealthModule,

@@ -6,6 +6,7 @@ export * from './auth';
 export * from './bookings';
 export * from './catalog';
 export * from './locations';
+export * from './payments';
 export * from './phone';
 export * from './vehicles';
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type {
   Address,
+  Payment,
   Prisma,
   Review,
   Service,
@@ -20,6 +21,7 @@ export type BookingWithRelations = ServiceBooking & {
   address: Address;
   provider: (ServiceProvider & { user: { displayName: string; phone: string } }) | null;
   review: Review | null;
+  payment: Payment | null;
 };
 
 const bookingInclude = {
@@ -28,6 +30,7 @@ const bookingInclude = {
   address: true,
   provider: { include: { user: { select: { displayName: true, phone: true } } } },
   review: true,
+  payment: true,
 } satisfies Prisma.ServiceBookingInclude;
 
 export interface ListBookingsParams {

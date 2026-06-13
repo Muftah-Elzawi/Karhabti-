@@ -16,6 +16,19 @@ const envSchema = z.object({
   SENTRY_DSN: z.string().optional(),
   // Comma-separated list of allowed browser origins.
   CORS_ORIGINS: z.string().default('http://localhost:3000,http://localhost:3002'),
+
+  // Payments (Plutu). `sandbox` selects the in-process mock gateway — no real
+  // calls, OTP fixed to PLUTU_SANDBOX_OTP. `live` requires the real credentials
+  // and the HTTP driver (added when a merchant account is approved).
+  PLUTU_MODE: z.enum(['sandbox', 'live']).default('sandbox'),
+  PLUTU_BASE_URL: z.string().default('https://api.plutu.ly/api/v1'),
+  PLUTU_API_KEY: z.string().optional(),
+  PLUTU_API_SECRET: z.string().optional(),
+  PLUTU_ACCESS_TOKEN: z.string().optional(),
+  // HMAC secret used to verify the Plutu callback signature.
+  PLUTU_WEBHOOK_SECRET: z.string().default('plutu-sandbox-webhook-secret'),
+  // Fixed OTP the sandbox gateway accepts (dev/testing only).
+  PLUTU_SANDBOX_OTP: z.string().default('123456'),
 });
 
 export type Env = z.infer<typeof envSchema>;

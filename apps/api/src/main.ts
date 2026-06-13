@@ -11,7 +11,9 @@ import type { Env } from './config/env';
 import { parseCorsOrigins } from './config/env';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  // rawBody: true preserves the unparsed request body so the Plutu webhook can
+  // verify the HMAC signature against the exact bytes Plutu signed.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, rawBody: true });
   app.useLogger(app.get(Logger));
 
   const config: ConfigService<Env, true> = app.get(ConfigService);

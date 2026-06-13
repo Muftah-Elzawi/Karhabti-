@@ -14,6 +14,7 @@ export interface BookingDto {
   address: { id: string; label: string; governorate: string; area: string };
   provider: { id: string; businessName: string } | null;
   review: { rating: number; body: string | null } | null;
+  payment: { id: string; status: string; method: string; requiresOtp: boolean } | null;
   cancellationReason: string | null;
   timeline: {
     createdAt: Date;
@@ -51,6 +52,14 @@ export function toBookingDto(
       ? { id: booking.provider.id, businessName: booking.provider.businessName }
       : null,
     review: booking.review ? { rating: booking.review.rating, body: booking.review.body } : null,
+    payment: booking.payment
+      ? {
+          id: booking.payment.id,
+          status: booking.payment.status,
+          method: booking.payment.method,
+          requiresOtp: booking.payment.status === 'PENDING' && booking.payment.provider === 'PLUTU',
+        }
+      : null,
     cancellationReason: booking.cancellationReason,
     timeline: {
       createdAt: booking.createdAt,

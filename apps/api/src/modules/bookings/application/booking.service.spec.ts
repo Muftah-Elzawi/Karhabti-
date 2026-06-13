@@ -75,6 +75,7 @@ const bookingRow = (overrides: Partial<BookingWithRelations> = {}): BookingWithR
     },
     provider: null,
     review: null,
+    payment: null,
     ...overrides,
   }) as BookingWithRelations;
 
