@@ -68,6 +68,21 @@ export interface AddressDto {
 
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
 
+export type PaymentStatus = 'INITIATED' | 'PENDING' | 'SUCCESS' | 'FAILED' | 'REFUNDED';
+export type PaymentMethod = 'COD' | 'SADAD' | 'ADFALI' | 'CARD';
+
+export interface PaymentDto {
+  id: string;
+  amountLYD: string;
+  method: PaymentMethod;
+  provider: 'PLUTU' | 'CASH';
+  status: PaymentStatus;
+  requiresOtp: boolean;
+  initiatedAt: string;
+  paidAt: string | null;
+  refundedAt: string | null;
+}
+
 export interface BookingDto {
   id: string;
   status: BookingStatus;
@@ -79,6 +94,12 @@ export interface BookingDto {
   address: { id: string; label: string; governorate: string; area: string };
   provider: { id: string; businessName: string } | null;
   review: { rating: number; body: string | null } | null;
+  payment: {
+    id: string;
+    status: PaymentStatus;
+    method: PaymentMethod;
+    requiresOtp: boolean;
+  } | null;
   cancellationReason: string | null;
   timeline: {
     createdAt: string;

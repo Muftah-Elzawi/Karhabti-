@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { BookingStatusBadge } from '@/components/booking-status-badge';
 import type { EligibleProvider } from '@/components/bookings/booking-row-actions';
 import { BookingRowActions } from '@/components/bookings/booking-row-actions';
+import { PaymentCell } from '@/components/bookings/payment-cell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -95,6 +96,7 @@ export default async function AdminBookingsPage({
                 <TableHead>{t.booking.stepAddress}</TableHead>
                 <TableHead>{t.booking.price}</TableHead>
                 <TableHead>{t.bookings.provider}</TableHead>
+                <TableHead>{t.admin.payment}</TableHead>
                 <TableHead>{t.admin.actions}</TableHead>
               </TableRow>
             </TableHeader>
@@ -129,6 +131,9 @@ export default async function AdminBookingsPage({
                     {booking.provider?.businessName ?? (
                       <span className="text-muted-foreground">{t.bookings.notAssigned}</span>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <PaymentCell payment={booking.payment} t={t} />
                   </TableCell>
                   <TableCell>
                     <BookingRowActions booking={booking} providers={eligibleProviders} t={t} />

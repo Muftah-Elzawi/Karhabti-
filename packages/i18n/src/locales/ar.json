@@ -110,6 +110,27 @@
     "yourReview": "تقييمك",
     "cancelledReason": "السبب"
   },
+  "payment": {
+    "title": "الدفع",
+    "payNow": "ادفع الآن",
+    "method": "طريقة الدفع",
+    "methodCOD": "الدفع عند الاستلام",
+    "methodSADAD": "محفظة سداد",
+    "methodADFALI": "محفظة أدفلي",
+    "methodCARD": "بطاقة",
+    "walletNumber": "رقم المحفظة",
+    "pay": "ادفع",
+    "otpSentHint": "أدخل الرمز المرسل إلى محفظتك",
+    "otpCode": "رمز التحقق",
+    "confirm": "تأكيد الدفع",
+    "status": "حالة الدفع",
+    "statusPaid": "مدفوع",
+    "statusRefunded": "مُسترد",
+    "statusPendingCod": "الدفع عند الاستلام — ادفع عند إتمام الخدمة",
+    "statusPendingWallet": "بانتظار التأكيد",
+    "statusFailed": "فشل الدفع",
+    "retry": "حاول مرة أخرى"
+  },
   "provider": {
     "jobsTitle": "مهامي",
     "empty": "لا توجد مهام مسندة إليك بعد",
@@ -169,7 +190,18 @@
     "filterEntityType": "نوع الكيان",
     "filterEntityId": "معرّف الكيان",
     "filter": "تصفية",
-    "loadOlder": "عرض الأقدم"
+    "loadOlder": "عرض الأقدم",
+    "payment": "الدفع",
+    "refund": "استرداد",
+    "confirmRefund": "تأكيد الاسترداد",
+    "noPayment": "لا يوجد دفع",
+    "paymentStatus": {
+      "INITIATED": "بدأت",
+      "PENDING": "قيد الانتظار",
+      "SUCCESS": "مدفوع",
+      "FAILED": "فشل",
+      "REFUNDED": "مُسترد"
+    }
   },
   "errors": {
     "VALIDATION_ERROR": "تحقق من البيانات المدخلة",
@@ -197,6 +229,15 @@
     "PROVIDER_NOT_FOUND": "المزوّد غير موجود",
     "PROVIDER_EXISTS": "لدى هذا المستخدم ملف مزوّد بالفعل",
     "ADMIN_NOT_ALLOWED": "لا يمكن تحويل حساب مدير إلى مزوّد",
+    "PAYMENT_ALREADY_PAID": "تم دفع هذا الحجز بالفعل",
+    "PAYMENT_IN_PROGRESS": "هناك عملية دفع جارية بالفعل",
+    "PAYMENT_NOT_FOUND": "لا توجد عملية دفع",
+    "PAYMENT_NOT_CONFIRMABLE": "لا تتطلب هذه العملية خطوة تأكيد",
+    "INVALID_PAYMENT_STATE": "لم يعد بالإمكان تأكيد هذه العملية",
+    "PAYMENT_DECLINED": "تم رفض عملية الدفع",
+    "PAYMENT_GATEWAY_ERROR": "تعذّر الوصول إلى خدمة الدفع — حاول مرة أخرى",
+    "CANNOT_REFUND": "لا يمكن استرداد إلا عملية دفع ناجحة",
+    "mobile_number_required": "أدخل رقم محفظتك",
     "CANNOT_CANCEL": "لا يمكن إلغاء هذا الحجز الآن",
     "BOOKING_NOT_COMPLETED": "يمكن التقييم بعد اكتمال الخدمة فقط",
     "ALREADY_REVIEWED": "سبق أن قيّمت هذا الحجز",

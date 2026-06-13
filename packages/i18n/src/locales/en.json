@@ -110,6 +110,27 @@
     "yourReview": "Your review",
     "cancelledReason": "Reason"
   },
+  "payment": {
+    "title": "Payment",
+    "payNow": "Pay now",
+    "method": "Payment method",
+    "methodCOD": "Cash on delivery",
+    "methodSADAD": "Sadad wallet",
+    "methodADFALI": "Adfali wallet",
+    "methodCARD": "Card",
+    "walletNumber": "Wallet number",
+    "pay": "Pay",
+    "otpSentHint": "Enter the code sent to your wallet",
+    "otpCode": "Verification code",
+    "confirm": "Confirm payment",
+    "status": "Payment status",
+    "statusPaid": "Paid",
+    "statusRefunded": "Refunded",
+    "statusPendingCod": "Cash on delivery — pay when the service is done",
+    "statusPendingWallet": "Awaiting confirmation",
+    "statusFailed": "Payment failed",
+    "retry": "Try again"
+  },
   "provider": {
     "jobsTitle": "My jobs",
     "empty": "No jobs assigned yet",
@@ -169,7 +190,18 @@
     "filterEntityType": "Entity type",
     "filterEntityId": "Entity ID",
     "filter": "Filter",
-    "loadOlder": "Load older"
+    "loadOlder": "Load older",
+    "payment": "Payment",
+    "refund": "Refund",
+    "confirmRefund": "Confirm refund",
+    "noPayment": "No payment",
+    "paymentStatus": {
+      "INITIATED": "Initiated",
+      "PENDING": "Pending",
+      "SUCCESS": "Paid",
+      "FAILED": "Failed",
+      "REFUNDED": "Refunded"
+    }
   },
   "errors": {
     "VALIDATION_ERROR": "Check the entered data",
@@ -197,6 +229,15 @@
     "PROVIDER_NOT_FOUND": "Provider not found",
     "PROVIDER_EXISTS": "This user already has a provider profile",
     "ADMIN_NOT_ALLOWED": "Admin accounts cannot become providers",
+    "PAYMENT_ALREADY_PAID": "This booking is already paid",
+    "PAYMENT_IN_PROGRESS": "A payment is already in progress",
+    "PAYMENT_NOT_FOUND": "No payment found",
+    "PAYMENT_NOT_CONFIRMABLE": "This payment has no confirmation step",
+    "INVALID_PAYMENT_STATE": "This payment can no longer be confirmed",
+    "PAYMENT_DECLINED": "The payment was declined",
+    "PAYMENT_GATEWAY_ERROR": "Could not reach the payment service — try again",
+    "CANNOT_REFUND": "Only a successful payment can be refunded",
+    "mobile_number_required": "Enter your wallet number",
     "CANNOT_CANCEL": "This booking can no longer be cancelled",
     "BOOKING_NOT_COMPLETED": "You can review after the service is completed",
     "ALREADY_REVIEWED": "You already reviewed this booking",

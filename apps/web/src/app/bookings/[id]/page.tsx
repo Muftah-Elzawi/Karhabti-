@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
 import { CancelBookingButton, ReviewForm } from '@/components/booking/booking-actions';
+import { PaymentSection } from '@/components/booking/payment-section';
 import { StatusBadge } from '@/components/booking/status-badge';
 import type { BookingDto } from '@/lib/api';
 import { ApiError } from '@/lib/api';
@@ -118,6 +119,10 @@ export default async function BookingDetailPage({ params }: { params: { id: stri
               {booking.review.body ? ` — ${booking.review.body}` : ''}
             </dd>
           </div>
+        ) : null}
+
+        {booking.status !== 'CANCELLED' ? (
+          <PaymentSection bookingId={booking.id} payment={booking.payment} t={t} />
         ) : null}
 
         {canCancel ? <CancelBookingButton bookingId={booking.id} t={t} /> : null}
