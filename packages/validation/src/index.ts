@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export * from './addresses';
+export * from './audit';
 export * from './auth';
 export * from './bookings';
 export * from './catalog';

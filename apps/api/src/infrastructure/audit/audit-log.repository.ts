@@ -12,6 +12,17 @@ export interface AuditEntry {
   after?: Prisma.InputJsonValue;
 }
 
+export type AuditLogWithActor = Prisma.AuditLogGetPayload<{
+  include: { actor: { select: { id: true; displayName: true; phone: true } } };
+}>;
+
+export interface AuditLogFilter {
+  entityType?: string;
+  entityId?: string;
+  cursor?: string;
+  limit: number;
+}
+
 /**
  * Every state-changing action writes an AuditLog entry (CLAUDE.md).
  * Append-only; never throws into the caller's flow.
@@ -30,6 +41,20 @@ export class AuditLogRepository {
         before: entry.before,
         after: entry.after,
       },
+    });
+  }
+
+  /** Newest-first cursor page — unlike catalog lists, the audit log reads backwards. */
+  async list(filter: AuditLogFilter): Promise<AuditLogWithActor[]> {
+    return this.prisma.auditLog.findMany({
+      where: {
+        ...(filter.entityType ? { entityType: filter.entityType } : {}),
+        ...(filter.entityId ? { entityId: filter.entityId } : {}),
+      },
+      include: { actor: { select: { id: true, displayName: true, phone: true } } },
+      take: filter.limit + 1,
+      orderBy: { id: 'desc' },
+      ...(filter.cursor ? { cursor: { id: filter.cursor }, skip: 1 } : {}),
     });
   }
 }

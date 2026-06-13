@@ -12,6 +12,7 @@ import { AuditModule } from './infrastructure/audit/audit.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { SmsModule } from './infrastructure/sms/sms.module';
 import { AddressesModule } from './modules/addresses/addresses.module';
+import { AuditLogsModule } from './modules/audit/audit-logs.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
@@ -46,6 +47,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     SmsModule,
     AuthModule,
     AddressesModule,
+    AuditLogsModule,
     BookingsModule,
     CatalogModule,
     NotificationsModule,

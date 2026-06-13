@@ -1,11 +1,6 @@
-import { defaultLocale, messages } from '@karhabti/i18n';
+import { redirect } from 'next/navigation';
 
-const t = messages[defaultLocale];
-
+/** The dashboard home is the bookings queue. */
 export default function AdminHomePage() {
-  return (
-    <main>
-      <h1>{t.common.appName}</h1>
-    </main>
-  );
+  redirect('/bookings');
 }
