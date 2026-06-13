@@ -15,6 +15,10 @@ export default function RegisterPage() {
       <div className="card">
         <h1 className="title">{t.auth.registerTitle}</h1>
         <RegisterForm t={t.auth} errorsT={t.errors} />
+        <p className="auth-footer legal-consent">
+          {t.legal.consent} <Link href="/terms">{t.legal.footerTerms}</Link> {t.legal.consentAnd}{' '}
+          <Link href="/privacy">{t.legal.footerPrivacy}</Link>
+        </p>
         <p className="auth-footer">
           <Link href="/login">{t.auth.haveAccount}</Link>
         </p>

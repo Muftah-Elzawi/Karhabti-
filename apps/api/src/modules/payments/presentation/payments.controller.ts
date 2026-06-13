@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
 import type { ConfirmPaymentInput, InitPaymentInput } from '@karhabti/validation';
 import { confirmPaymentSchema, initPaymentSchema } from '@karhabti/validation';
@@ -10,6 +11,9 @@ import { ZodValidationPipe } from '../../../common/pipes/zod-validation.pipe';
 import type { AuthenticatedUser } from '../../auth/domain/token-payload';
 import type { PaymentDto } from '../application/payment-dto';
 import { PaymentService } from '../application/payment.service';
+
+/** Brake on OTP guessing: 10 confirm attempts / 15 min (on top of the wallet OTP's own expiry). */
+const PAYMENT_OTP_THROTTLE = { default: { limit: 10, ttl: 15 * 60 * 1000 } };
 
 @ApiTags('payments')
 @ApiBearerAuth()
@@ -31,6 +35,7 @@ export class PaymentsController {
 
   @Post('confirm')
   @HttpCode(200)
+  @Throttle(PAYMENT_OTP_THROTTLE)
   @ApiOperation({ summary: 'Confirm a wallet payment with the OTP' })
   confirm(
     @CurrentUser() user: AuthenticatedUser,

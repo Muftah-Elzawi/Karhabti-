@@ -110,6 +110,38 @@
     "yourReview": "Your review",
     "cancelledReason": "Reason"
   },
+  "legal": {
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service",
+    "lastUpdated": "Last updated: June 2026",
+    "draftNotice": "Draft pending legal review — not yet binding.",
+    "footerPrivacy": "Privacy Policy",
+    "footerTerms": "Terms",
+    "rights": "All rights reserved.",
+    "consent": "By creating an account you agree to our",
+    "consentAnd": "and",
+    "privacy": [
+      "Karhabti (\"we\") provides car-care services and related features in Libya. This policy explains what personal data we collect, why, and your choices. We collect only what we need to run the service.",
+      "Data we collect: your name and phone number (for your account and one-time verification codes); an optional email; your vehicles (make, model, year, mileage) and saved addresses; your bookings, reviews, and payment records; and basic technical logs needed to operate and secure the service.",
+      "How we use it: to create and manage your account, fulfil your bookings, assign service providers, process payments, send you service-related notifications (SMS and in-app), and improve and secure the service.",
+      "Payments: card and wallet payments are processed by our payment provider (Plutu). We store the payment status and a transaction reference, not your full wallet or card credentials.",
+      "Sharing: we share booking details with the assigned service provider only as needed to deliver the service. We do not sell your personal data. We may share data with providers who help us operate (hosting, SMS, payments) and where required by law.",
+      "Retention: we keep your data while your account is active and as needed for legal, accounting, and dispute purposes.",
+      "Your choices: you can view and update your profile, vehicles, and addresses in the app, and request deletion of your account by contacting support.",
+      "Contact: reach us at the support channel listed in the app. This document is a draft and will be finalised with legal counsel before launch."
+    ],
+    "terms": [
+      "These terms govern your use of Karhabti. By using the app you agree to them.",
+      "Accounts: you must provide accurate information and keep your login secure. You are responsible for activity under your account. You must be legally able to enter into a contract.",
+      "Bookings: a booking is a request for a car-care service at the time and address you choose. Prices are shown in Libyan Dinar (LYD) and are fixed at the time of booking. You may cancel while a booking is still pending or confirmed.",
+      "Payments: you can pay cash on delivery or via supported mobile wallets. Wallet payments are handled by our payment provider; you authorise the charge for the booking amount. Refunds, where due, are issued to the original method.",
+      "Service providers: services are carried out by independent providers on the platform. We work to verify providers but you acknowledge that the service itself is delivered by them.",
+      "Acceptable use: do not misuse the platform, attempt to disrupt it, or use it for unlawful purposes.",
+      "Liability: the service is provided on a reasonable-efforts basis. To the extent permitted by law, our liability is limited to the amount you paid for the relevant booking.",
+      "Changes: we may update these terms; continued use after an update means you accept it.",
+      "This document is a draft and will be finalised with legal counsel before launch."
+    ]
+  },
   "payment": {
     "title": "Payment",
     "payNow": "Pay now",

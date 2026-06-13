@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { dirFor } from '@karhabti/i18n';
 
 import { ServiceWorkerRegister } from '@/components/service-worker-register';
+import { SiteFooter } from '@/components/site-footer';
 import { getLocale, getMessages } from '@/lib/i18n';
 
 const arabicFont = IBM_Plex_Sans_Arabic({
@@ -45,7 +46,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body>
         <ServiceWorkerRegister />
-        {children}
+        <div className="app-shell">{children}</div>
+        <SiteFooter />
       </body>
     </html>
   );
