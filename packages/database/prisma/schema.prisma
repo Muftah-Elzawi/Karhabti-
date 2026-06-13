@@ -1,0 +1,702 @@
+// Karhabti data model — full schema from KARHABTI_BUILD_PROMPT.md §5.
+// Designed up front: services, parts, AND companion entities from day one.
+//
+// Conventions:
+// - Money is LYD in Decimal(10,2) — never floats (CLAUDE.md).
+// - Mileage is km, time intervals are explicit days/months.
+// - Governorate/city are slugs validated against the shared list in
+//   @karhabti/validation (launch: tripoli, benghazi).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+enum Locale {
+  ar
+  en
+}
+
+enum OtpPurpose {
+  REGISTER
+  LOGIN
+  PASSWORD_RESET
+}
+
+enum MaintenanceSource {
+  SELF_REPORTED
+  KARHABTI_SERVICE
+}
+
+enum ProviderStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ProductCondition {
+  NEW
+  USED
+  REFURBISHED
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  REMOVED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CONVERTED
+  CLOSED
+}
+
+enum LeadChannel {
+  WHATSAPP
+}
+
+enum ReturnStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum PaymentMethod {
+  COD
+  SADAD
+  ADFALI
+  CARD
+}
+
+enum PaymentProvider {
+  PLUTU
+  CASH
+}
+
+enum PaymentStatus {
+  INITIATED
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentRelatedType {
+  BOOKING
+  ORDER
+}
+
+// ---------------------------------------------------------------------------
+// Identity & profile
+// ---------------------------------------------------------------------------
+
+model User {
+  id              String   @id @default(cuid())
+  phone           String   @unique // primary identifier in Libya, local format e.g. 0912345678
+  email           String?  @unique
+  passwordHash    String
+  displayName     String
+  role            UserRole @default(CUSTOMER)
+  locale          Locale   @default(ar)
+  isPhoneVerified Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  addresses       Address[]
+  refreshTokens   RefreshToken[]
+  vehicles        Vehicle[]
+  bookings        ServiceBooking[] @relation("CustomerBookings")
+  reviews         Review[]
+  providerProfile ServiceProvider?
+  products        Product[]        @relation("SellerProducts")
+  cart            Cart?
+  orders          ProductOrder[]
+  leadRequests    LeadRequest[]
+  pointsLedger    PointsLedger[]
+  milestones      Milestone[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  label       String // e.g. "home", "work" — i18n key or free text
+  governorate String // slug from @karhabti/validation (launch: tripoli, benghazi)
+  city        String // slug from @karhabti/validation
+  area        String // free text, e.g. "قرقارش"
+  details     String? // building, landmarks, delivery notes
+  lat         Float?
+  lng         Float?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings ServiceBooking[]
+
+  @@index([userId])
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model OtpCode {
+  id         String     @id @default(cuid())
+  phone      String
+  codeHash   String
+  purpose    OtpPurpose
+  expiresAt  DateTime
+  consumedAt DateTime?
+  attempts   Int        @default(0)
+  createdAt  DateTime   @default(now())
+
+  @@index([phone, purpose])
+}
+
+// ---------------------------------------------------------------------------
+// The car (companion core)
+// ---------------------------------------------------------------------------
+
+model VehicleMake {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  models   VehicleModel[]
+  vehicles Vehicle[]
+  fitments ProductFitment[]
+  careTips CareTip[]
+}
+
+model VehicleModel {
+  id        String   @id @default(cuid())
+  makeId    String
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+
+  make     VehicleMake      @relation(fields: [makeId], references: [id], onDelete: Cascade)
+  vehicles Vehicle[]
+  fitments ProductFitment[]
+  careTips CareTip[]
+
+  @@unique([makeId, slug])
+}
+
+model Vehicle {
+  id          String   @id @default(cuid())
+  userId      String
+  makeId      String
+  modelId     String
+  year        Int
+  engine      String? // e.g. "1.6L"
+  nickname    String?
+  plateNumber String?
+  mileageKm   Int      @default(0)
+  color       String?
+  photoUrl    String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user               User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  make               VehicleMake                @relation(fields: [makeId], references: [id])
+  model              VehicleModel               @relation(fields: [modelId], references: [id])
+  maintenanceRecords VehicleMaintenanceRecord[]
+  careScores         CareScore[]
+  bookings           ServiceBooking[]
+  leadRequests       LeadRequest[]
+
+  @@index([userId])
+}
+
+model MaintenanceItem {
+  id                    String   @id @default(cuid())
+  slug                  String   @unique
+  nameAr                String
+  nameEn                String
+  descriptionAr         String?
+  descriptionEn         String?
+  defaultIntervalKm     Int? // km between services
+  defaultIntervalMonths Int? // months between services
+  icon                  String?
+  createdAt             DateTime @default(now())
+
+  records VehicleMaintenanceRecord[]
+}
+
+model VehicleMaintenanceRecord {
+  id                 String            @id @default(cuid())
+  vehicleId          String
+  maintenanceItemId  String
+  performedAt        DateTime
+  mileageAtServiceKm Int
+  source             MaintenanceSource @default(SELF_REPORTED)
+  nextDueKm          Int?
+  nextDueDate        DateTime?
+  notes              String?
+  createdAt          DateTime          @default(now())
+
+  vehicle         Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  maintenanceItem MaintenanceItem @relation(fields: [maintenanceItemId], references: [id])
+
+  @@index([vehicleId])
+}
+
+model CareTip {
+  id        String   @id @default(cuid())
+  titleAr   String
+  titleEn   String
+  bodyAr    String
+  bodyEn    String
+  category  String // e.g. "engine", "tires", "seasonal"
+  // climate/season conditions, e.g. ["summer-heat", "dusty-season"]
+  conditions String[] @default([])
+  // optional make/model/year targeting; null = applies to all
+  makeId    String?
+  modelId   String?
+  yearFrom  Int?
+  yearTo    Int?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  make  VehicleMake?  @relation(fields: [makeId], references: [id])
+  model VehicleModel? @relation(fields: [modelId], references: [id])
+
+  @@index([makeId, modelId])
+}
+
+// ---------------------------------------------------------------------------
+// Services
+// ---------------------------------------------------------------------------
+
+model ServiceCategory {
+  id        String   @id @default(cuid())
+  nameAr    String
+  nameEn    String
+  slug      String   @unique
+  icon      String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  services Service[]
+}
+
+model Service {
+  id              String   @id @default(cuid())
+  categoryId      String
+  nameAr          String
+  nameEn          String
+  descriptionAr   String
+  descriptionEn   String
+  basePriceLYD    Decimal  @db.Decimal(10, 2)
+  durationMinutes Int
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  category ServiceCategory  @relation(fields: [categoryId], references: [id])
+  bookings ServiceBooking[]
+
+  @@index([categoryId])
+}
+
+model ServiceProvider {
+  id           String         @id @default(cuid())
+  userId       String         @unique
+  businessName String
+  governorate  String // slug from @karhabti/validation
+  serviceAreas String[]       @default([]) // area names within the governorate
+  rating       Decimal?       @db.Decimal(3, 2) // computed from reviews
+  isVerified   Boolean        @default(false)
+  status       ProviderStatus @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings ServiceBooking[]
+
+  @@index([governorate, status])
+}
+
+model ServiceBooking {
+  id           String        @id @default(cuid())
+  customerId   String
+  providerId   String? // null until assigned
+  serviceId    String
+  vehicleId    String
+  addressId    String
+  scheduledFor DateTime
+  status       BookingStatus @default(PENDING)
+  priceLYD     Decimal       @db.Decimal(10, 2)
+  paymentId    String?       @unique
+  notes        String?
+
+  // status transition timestamps (booking state machine, Phase 2)
+  confirmedAt        DateTime?
+  inProgressAt       DateTime?
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+  cancellationReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customer User             @relation("CustomerBookings", fields: [customerId], references: [id])
+  provider ServiceProvider? @relation(fields: [providerId], references: [id])
+  service  Service          @relation(fields: [serviceId], references: [id])
+  vehicle  Vehicle          @relation(fields: [vehicleId], references: [id])
+  address  Address          @relation(fields: [addressId], references: [id])
+  payment  Payment?         @relation(fields: [paymentId], references: [id])
+  review   Review?
+
+  @@index([customerId])
+  @@index([providerId, status])
+  @@index([status, scheduledFor])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  bookingId  String   @unique
+  customerId String
+  rating     Int // 1–5, validated at the application layer
+  body       String?
+  createdAt  DateTime @default(now())
+
+  booking  ServiceBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  customer User           @relation(fields: [customerId], references: [id])
+
+  @@index([customerId])
+}
+
+// ---------------------------------------------------------------------------
+// Parts
+// ---------------------------------------------------------------------------
+
+model ProductCategory {
+  id        String   @id @default(cuid())
+  parentId  String?
+  nameAr    String
+  nameEn    String
+  slug      String   @unique
+  icon      String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  parent   ProductCategory?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children ProductCategory[] @relation("CategoryTree")
+  products Product[]
+
+  @@index([parentId])
+}
+
+model Product {
+  id              String           @id @default(cuid())
+  sellerId        String? // null in the reseller model (Karhabti is the seller)
+  categoryId      String
+  nameAr          String
+  nameEn          String
+  descriptionAr   String
+  descriptionEn   String
+  oemCode         String?
+  aftermarketCode String?
+  brand           String?
+  condition       ProductCondition @default(NEW)
+  priceLYD        Decimal          @db.Decimal(10, 2)
+  stock           Int              @default(0)
+  status          ProductStatus    @default(DRAFT)
+  images          Json             @default("[]") // ordered array of image URLs
+  warrantyMonths  Int?
+  weightKg        Decimal?         @db.Decimal(8, 3)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  seller       User?            @relation("SellerProducts", fields: [sellerId], references: [id])
+  category     ProductCategory  @relation(fields: [categoryId], references: [id])
+  fitments     ProductFitment[]
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+  leadRequests LeadRequest[]
+
+  @@index([categoryId, status])
+  @@index([oemCode])
+  @@index([brand])
+}
+
+model ProductFitment {
+  id        String   @id @default(cuid())
+  productId String
+  makeId    String
+  modelId   String? // null = fits all models of the make
+  yearFrom  Int?
+  yearTo    Int?
+  engine    String?
+  createdAt DateTime @default(now())
+
+  product Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  make    VehicleMake   @relation(fields: [makeId], references: [id])
+  model   VehicleModel? @relation(fields: [modelId], references: [id])
+
+  @@index([productId])
+  @@index([makeId, modelId])
+}
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String?  @unique // one active cart per user
+  sessionId String?  @unique // guest carts; merged into the user cart on login
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId])
+}
+
+model ProductOrder {
+  id              String      @id @default(cuid())
+  buyerId         String
+  status          OrderStatus @default(PENDING)
+  shippingAddress Json // snapshot of the address at order time
+  totalLYD        Decimal     @db.Decimal(10, 2)
+  paymentId       String?     @unique
+  notes           String?
+
+  // status transition timestamps (order state machine, Phase 6)
+  confirmedAt DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  cancelledAt DateTime?
+  returnedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  buyer   User        @relation(fields: [buyerId], references: [id])
+  payment Payment?    @relation(fields: [paymentId], references: [id])
+  items   OrderItem[]
+  returns Return[]
+
+  @@index([buyerId])
+  @@index([status])
+}
+
+model OrderItem {
+  id              String   @id @default(cuid())
+  orderId         String
+  productId       String
+  quantity        Int
+  unitPriceLYD    Decimal  @db.Decimal(10, 2)
+  productSnapshot Json // name/codes/image at purchase time
+  createdAt       DateTime @default(now())
+
+  order   ProductOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product      @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+}
+
+model LeadRequest {
+  id           String      @id @default(cuid())
+  productId    String
+  userId       String
+  vehicleId    String?
+  status       LeadStatus  @default(NEW)
+  channel      LeadChannel @default(WHATSAPP)
+  trackingCode String      @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  product Product  @relation(fields: [productId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id])
+
+  @@index([status])
+}
+
+model Return {
+  id          String       @id @default(cuid())
+  orderId     String
+  reason      String
+  status      ReturnStatus @default(REQUESTED)
+  resolution  String?
+  requestedAt DateTime     @default(now())
+  resolvedAt  DateTime?
+  updatedAt   DateTime     @updatedAt
+
+  order ProductOrder @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------------------
+// Payments
+// ---------------------------------------------------------------------------
+
+model Payment {
+  id          String             @id @default(cuid())
+  amountLYD   Decimal            @db.Decimal(10, 2)
+  method      PaymentMethod
+  provider    PaymentProvider
+  status      PaymentStatus      @default(INITIATED)
+  plutuRef    String?            @unique // Plutu transaction reference (webhook idempotency)
+  rawPayload  Json? // last raw provider payload, stored after signature verification
+  relatedType PaymentRelatedType
+  relatedId   String
+
+  initiatedAt DateTime  @default(now())
+  paidAt      DateTime?
+  failedAt    DateTime?
+  refundedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  booking ServiceBooking?
+  order   ProductOrder?
+
+  @@index([relatedType, relatedId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Engagement (companion layer)
+// ---------------------------------------------------------------------------
+
+model CareScore {
+  id         String   @id @default(cuid())
+  vehicleId  String
+  score      Int // 0–100, computed honestly from real maintenance data
+  computedAt DateTime @default(now())
+  breakdown  Json // per-component contributions (oil, tires, brakes, ...)
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, computedAt])
+}
+
+model PointsLedger {
+  id           String   @id @default(cuid())
+  userId       String
+  delta        Int // positive = earned, negative = redeemed
+  reason       String // ties to REAL actions only (completed bookings/orders)
+  relatedType  String?
+  relatedId    String?
+  balanceAfter Int
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Milestone {
+  id         String   @id @default(cuid())
+  userId     String
+  type       String // e.g. "first-booking", "one-year-care", "ten-services"
+  achievedAt DateTime @default(now())
+  isShared   Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // e.g. "booking-status", "maintenance-due", "milestone"
+  titleAr   String
+  titleEn   String
+  bodyAr    String
+  bodyEn    String
+  isRead    Boolean  @default(false)
+  deepLink  String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+// ---------------------------------------------------------------------------
+// Cross-cutting
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String? // null for system actions
+  action     String // e.g. "booking.confirm", "payment.refund"
+  entityType String
+  entityId   String
+  before     Json?
+  after      Json?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+}

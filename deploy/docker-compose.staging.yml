@@ -1,0 +1,97 @@
+# Karhabti staging — single VPS with Docker.
+# Usage (on the server, from the repo root):
+#   cp deploy/.env.staging.example deploy/.env.staging   # fill in real values
+#   docker compose -f deploy/docker-compose.staging.yml --env-file deploy/.env.staging up -d --build
+#   docker compose -f deploy/docker-compose.staging.yml --env-file deploy/.env.staging --profile migrate run --rm migrate
+name: karhabti-staging
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      STAGING_DOMAIN: ${STAGING_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+      - web
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://karhabti:${POSTGRES_PASSWORD}@postgres:5432/karhabti
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      CORS_ORIGINS: https://${STAGING_DOMAIN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  migrate:
+    profiles: ['migrate']
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      target: migrate
+    environment:
+      DATABASE_URL: postgresql://karhabti:${POSTGRES_PASSWORD}@postgres:5432/karhabti
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://api.${STAGING_DOMAIN}/api/v1
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: karhabti
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: karhabti
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U karhabti -d karhabti']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  caddy_data:
+  caddy_config:
+  pgdata:
+  redisdata:
