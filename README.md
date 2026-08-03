@@ -9,21 +9,24 @@ See [`KARHABTI_BUILD_PROMPT.md`](./KARHABTI_BUILD_PROMPT.md) for the full spec a
 
 ## Build status
 
-| Phase                                                 | Status                                   |
-| ----------------------------------------------------- | ---------------------------------------- |
-| 1 — Foundation (monorepo, schema, auth, web skeleton) | ✅ done (staging deploy deferred)        |
-| 2 — Car wash MVP                                      | 🔨 steps 1–5 done (backend + booking UI) |
-| 2.6 Provider portal · 2.7 Admin dashboard · 2.8 Plutu | ⬜ next                                  |
+| Phase                                                   | Status                                                                           |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 1 — Foundation (monorepo, schema, auth, web skeleton)   | ✅ done (staging deploy deferred)                                                |
+| 2 — Car wash MVP (booking, provider, admin, Plutu)      | ✅ done (payments sandbox-only)                                                  |
+| 3 — Launch prep                                         | ✅ code done · rest external: [`LAUNCH_READINESS`](./deploy/LAUNCH_READINESS.md) |
+| 6→now — Mobile app (pulled forward, services MVP scope) | 🔨 M1 scaffold + RTL shell done · M2 auth next                                   |
+| 4 — Parts catalog · 5 — Companion layer                 | ⬜ after mobile services parity                                                  |
 
 ## Monorepo layout
 
-| Path         | What it is                                                                           |
-| ------------ | ------------------------------------------------------------------------------------ |
-| `apps/api`   | NestJS backend — the one API all clients talk to (`/api/v1`, OpenAPI at `/api/docs`) |
-| `apps/web`   | Next.js customer web app (PWA)                                                       |
-| `apps/admin` | Next.js admin dashboard (internal, skeleton only so far)                             |
-| `packages/*` | Shared contracts only: types, Zod schemas, i18n, generated api-client, UI, config    |
-| `deploy/`    | Single-VPS staging kit (Caddy + compose) — ready for when a server exists            |
+| Path          | What it is                                                                                |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| `apps/api`    | NestJS backend — the one API all clients talk to (`/api/v1`, OpenAPI at `/api/docs`)      |
+| `apps/web`    | Next.js customer web app (PWA)                                                            |
+| `apps/admin`  | Next.js admin dashboard (internal, skeleton only so far)                                  |
+| `apps/mobile` | React Native + Expo customer app — see [`apps/mobile/README.md`](./apps/mobile/README.md) |
+| `packages/*`  | Shared contracts only: types, Zod schemas, i18n, generated api-client, UI, config         |
+| `deploy/`     | Single-VPS staging kit (Caddy + compose) — ready for when a server exists                 |
 
 Every app is standalone-runnable and independently deployable. Dependency direction is one-way
 (`apps/* → packages/*`) and enforced by ESLint boundary rules that fail CI.
