@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn/ui design tokens mapped to the Karhabti brand palette
+   (aubergine primary, copper accent, warm beige background). */
+@layer base {
+  :root {
+    --background: 34 47% 90%;
+    --foreground: 0 0% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+    --primary: 280 42% 20%;
+    --primary-foreground: 40 33% 96%;
+    --secondary: 34 40% 94%;
+    --secondary-foreground: 280 42% 20%;
+    --muted: 34 30% 92%;
+    --muted-foreground: 211 16% 34%;
+    --accent: 24 50% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 3 71% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 82 49% 32%;
+    --success-foreground: 0 0% 100%;
+    --border: 36 34% 82%;
+    --input: 36 34% 82%;
+    --ring: 280 42% 20%;
+    --radius: 0.625rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+}

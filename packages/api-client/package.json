@@ -1,0 +1,21 @@
+{
+  "name": "@karhabti/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Type-safe client GENERATED from the API's OpenAPI spec. Never hand-write API types here.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint . --ext .ts,.cjs",
+    "typecheck": "tsc --noEmit",
+    "generate": "echo 'api-client generation is wired up once the API serves its OpenAPI spec (Phase 1, Step 4)' && exit 1"
+  },
+  "devDependencies": {
+    "@karhabti/config": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "typescript": "^5.5.4"
+  }
+}

@@ -1,0 +1,15 @@
+# Never ship host artifacts into image builds — pnpm reinstalls inside.
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+.git
+.turbo
+coverage
+playwright-report
+test-results
+*.log
+.env
+.env.*
+!.env.example
+docker-compose.override.yml

@@ -1,0 +1,4 @@
+{
+  "extends": "@karhabti/config/tsconfig/base.json",
+  "include": ["src"]
+}

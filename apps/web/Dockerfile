@@ -1,0 +1,27 @@
+# Karhabti web — standalone image (Next.js standalone output).
+# Build from the REPO ROOT (the pnpm workspace is the build context):
+#   docker build -f apps/web/Dockerfile -t karhabti-web .
+
+FROM node:22-alpine AS build
+RUN corepack enable
+# Standalone output is produced ONLY inside Docker (see next.config.mjs).
+ENV NEXT_OUTPUT=standalone
+# Baked into the client bundle at build time — pass the real staging URL.
+ARG NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+WORKDIR /repo
+COPY . .
+RUN pnpm install --frozen-lockfile --filter @karhabti/web...
+# Build workspace packages consumed via their dist output.
+RUN pnpm --filter @karhabti/validation build
+RUN pnpm --filter @karhabti/web build
+
+FROM node:22-alpine AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=build /repo/apps/web/.next/standalone ./
+COPY --from=build /repo/apps/web/.next/static ./apps/web/.next/static
+COPY --from=build /repo/apps/web/public ./apps/web/public
+EXPOSE 3000
+USER node
+CMD ["node", "apps/web/server.js"]

@@ -1,0 +1,30 @@
+# Automatic HTTPS via Let's Encrypt — requires the DNS A records for
+# {$STAGING_DOMAIN} and api.{$STAGING_DOMAIN} to point at this server.
+
+# Shared edge security headers (applied to both sites). HSTS is set here at the
+# TLS edge because the app containers see plain HTTP behind this proxy. No strict
+# CSP yet — Next.js needs a tuned policy; tracked in LAUNCH_READINESS.md §6.
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+		# Hide the upstream server banner.
+		-Server
+	}
+}
+
+{$STAGING_DOMAIN} {
+	encode gzip
+	import security_headers
+	reverse_proxy web:3000
+}
+
+api.{$STAGING_DOMAIN} {
+	encode gzip
+	import security_headers
+	# The API is a backend, never framed.
+	header X-Frame-Options "DENY"
+	reverse_proxy api:3001
+}
